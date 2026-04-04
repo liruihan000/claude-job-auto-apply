@@ -1,0 +1,42 @@
+# === Personal Data (DO NOT COMMIT) ===
+
+# Credentials
+**/credentials.md
+**/credentials.*
+
+# Application records (contain personal info)
+Basic/applications/
+
+# Archive (old resume versions)
+Basic/archive/
+
+# Resume templates (contain personal info)
+Basic/templates/*.docx
+Basic/templates/*.pdf
+
+# User profile (contains personal info)
+.claude/skills/auto-apply-v2/references/user-profile.md
+
+# Secrets (credentials/passwords)
+.claude/skills/auto-apply-v2/references/secrets.md
+
+# Resume/cover letter configs (contain personal info)
+.claude/skills/auto-apply-v2/references/configs/
+
+# Application tracker
+.claude/skills/auto-apply-v2/references/application-tracker.md
+
+# === Build / Runtime ===
+
+# Screenshots
+**/*.png
+
+# Playwright MCP cache
+.playwright-mcp/
+
+# Node modules
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
