@@ -42,15 +42,19 @@ Generate based on answer N:
   }
 }
 ```
-If N=1, the user can simply install the Playwright plugin: `/plugin install playwright` — no `.mcp.json` needed.
+**Claude Code blocks all writes to `.mcp.json` (security policy).** Handle by parallel count:
 
-If N>1, generate `.mcp.json` via Bash (Write/Edit tools are blocked for this file):
+If N=1: Tell user to run `/plugin install playwright` in Claude Code. No `.mcp.json` needed.
+
+If N>1: Output the full JSON and tell user:
+"Create `.mcp.json` in your project root with this content. You can paste it directly or run in a terminal (outside Claude Code):"
 ```bash
 cat > .mcp.json << 'EOF'
-{generated JSON here}
+{generated JSON}
 EOF
 ```
-If user has existing `.mcp.json`, merge — don't overwrite.
+
+If user has existing `.mcp.json`, show how to merge playwright entries.
 
 After creating, tell user: **"Please restart Claude Code for browser instances to load, then run /job-auto-apply again."**
 
