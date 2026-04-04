@@ -145,3 +145,4 @@ For ATS-specific strategies, read the matching file in `ats-handlers/` if the pl
 - **On error**: retry up to `config.submit.max_retries_per_form` times, then skip and log reason.
 - **Never stop** until daily target is met.
 - Match user's language (see `config.preferences.response_language`).
+- **Self-updating**: When user requests a new search platform, ATS handler, or config change, update the corresponding files immediately (`config.json`, `references/search-guide.md`, `ats-handlers/*.md`) — don't ask user to edit manually.
