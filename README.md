@@ -24,7 +24,7 @@ Then type `/job-auto-apply`. First run guides you through setup. After that, it 
 ## Architecture
 
 ```
-               Claude Opus (Main Agent)
+               Claude Code (Main Agent)
               Orchestration · Queue · Decisions
                     │         │         │
             ┌───────┘         │         └───────┐

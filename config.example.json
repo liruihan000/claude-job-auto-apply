@@ -14,7 +14,7 @@
 
   "prepare": {
     "cover_letter_required": true,
-    "tailoring_checklist_steps": 8,
+    "tailoring_checklist_steps": 10,
     "max_bullets_per_role": 4
   },
 
