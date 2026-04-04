@@ -1,0 +1,37 @@
+{
+  "daily_target": 30,
+  "job_search": {
+    "keywords": ["AI Engineer", "Software Engineer", "ML Engineer", "Full Stack Developer", "Data Engineer"],
+    "locations": ["New York, NY", "New Jersey", "Remote"],
+    "job_type": "fulltime",
+    "max_age_days": 7,
+    "level_filter": ["Entry", "Junior", "Associate", "Mid", "I", "II", "New Grad"],
+    "level_exclude": ["Senior", "Staff", "Principal", "Lead", "Director", "Manager"]
+  },
+  "resume": {
+    "templates_dir": "Basic/templates",
+    "tailoring_checklist_steps": 8
+  },
+  "application": {
+    "tracker_path": "Basic/applications/TRACKER.md",
+    "applications_dir": "Basic/applications",
+    "cover_letter_required": true,
+    "pre_submit_validation": true,
+    "max_retries_per_form": 3,
+    "screenshot_review": true,
+    "screenshot_confirmation": true
+  },
+  "browser": {
+    "parallel_instances": 3,
+    "profile_dir": "~/.playwright/profile-{N}",
+    "prefer_google_signin": true,
+    "headless": false
+  },
+  "automation": {
+    "skip_on_no_sponsorship": true,
+    "skip_on_citizenship_required": true,
+    "auto_agree_terms": true,
+    "auto_register_accounts": true,
+    "auto_sign_esignatures": true
+  }
+}

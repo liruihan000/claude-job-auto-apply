@@ -11,13 +11,16 @@ metadata:
 
 # Auto-Apply V3
 
-> **Playwright instances** (adaptive):
-> On startup, read `.mcp.json` to detect available Playwright instances.
-> Set `N` = number of playwright entries found. Collect their tool prefixes into a list:
-> - Single entry `"playwright"` → prefix = `mcp__playwright__`, N = 1
-> - Numbered entries `"playwright-1"`, `"playwright-2"`, ... → prefixes = `mcp__playwright-1__`, `mcp__playwright-2__`, ..., N = count
-> All phases below use `N` for parallelism. Subagent template uses the corresponding prefix.
-> Tools per instance: `browser_snapshot`, `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_press_key`, `browser_evaluate`, `browser_take_screenshot`, `browser_wait_for`, `browser_tabs`, `browser_hover`
+> **Configuration**: On startup, run `node .claude/skills/auto-apply-v2/scripts/detect_config.js` to load all runtime parameters:
+> - `daily_target` — how many applications per day (default: 30)
+> - `playwright.count` — number of parallel browser instances (N)
+> - `playwright.instances[].prefix` — tool prefix for each instance (e.g. `mcp__playwright-1__`)
+> - `job_search` — keywords, locations, filters
+> - `application` — tracker path, cover letter required, max retries
+> - `automation` — sponsorship skip, auto-agree, etc.
+>
+> All phases below use these values. To change any setting, edit `config.json` in the project root.
+> Tools per Playwright instance: `browser_snapshot`, `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_press_key`, `browser_evaluate`, `browser_take_screenshot`, `browser_wait_for`, `browser_tabs`, `browser_hover`
 
 ---
 
@@ -36,8 +39,8 @@ Every time this skill is invoked:
 1. Read `Career/Basic/applications/TRACKER.md`
 2. Count `Submitted` column entries with today's date → `today_submitted`
 3. List ⬜ NOT SUBMITTED entries with materials ready
-4. Report: "今日已提交 X/30，待提交 Y 个"
-5. If `today_submitted >= 30` → report done and stop
+4. Report: "今日已提交 X/{daily_target}，待提交 Y 个"
+5. If `today_submitted >= daily_target` → report done and stop
 6. Otherwise → enter Auto-Apply Pipeline immediately
 
 **AUTONOMY: MAXIMUM** — full permission for everything, never ask user, never stop mid-loop.
@@ -48,8 +51,8 @@ Every time this skill is invoked:
 
 ### Phase 1: Search
 
-Find jobs until `pending + today_submitted >= 30`. Sources (parallel):
-1. **Indeed MCP**: `search_jobs` with multiple keywords in parallel
+Find jobs until `pending + today_submitted >= daily_target`. Sources (parallel):
+1. **Indeed MCP**: `search_jobs` with keywords and locations from `config.job_search`
 2. **LinkedIn**: Use one playwright instance to browse `linkedin.com/jobs`
 
 Keywords: "AI Engineer", "Software Engineer", "ML Engineer", "Full Stack Developer", "Data Engineer"
@@ -72,7 +75,7 @@ Can parallelize with subagents (no browser needed).
 ### Phase 3: Submit
 
 ```
-WHILE today_submitted < 30:
+WHILE today_submitted < daily_target:
     1. Pick up to N jobs with ⬜ + materials ready (N = Playwright instance count)
     2. Launch N subagents (run_in_background: true), each assigned a unique Playwright prefix
     3. Wait for completion

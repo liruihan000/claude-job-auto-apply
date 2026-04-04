@@ -1,7 +1,7 @@
 # Career Project — Claude Code Instructions
 
 ## Primary Goal
-Automate job applications to reach **30 new submissions per day**. Every session should continue from where the last one left off.
+Automate job applications to reach the daily target configured in `config.json` (`daily_target`, default: 30). Every session should continue from where the last one left off.
 
 ## On Every Session Start (AUTO-EXECUTE)
 
