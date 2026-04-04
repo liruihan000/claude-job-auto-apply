@@ -34,7 +34,7 @@ cp .claude/skills/auto-apply-v2/references/application-tracker.example.md \
    Basic/applications/TRACKER.md
 
 # Create required directories
-mkdir -p Basic/templates Basic/applications Basic/archive
+mkdir -p Basic/templates Basic/applications
 ```
 
 ## Step 3: Fill In Your Profile
@@ -134,7 +134,63 @@ If ATS portals send verification emails during registration, add Gmail MCP so th
 
 Connect Gmail MCP through Claude Code's built-in connector settings.
 
-## Step 6: Install Script Dependencies
+## Step 6: Headless Server Setup (for servers without a monitor)
+
+If running on a headless server (no physical display), install Xvfb to provide a virtual display for Playwright:
+
+```bash
+sudo apt-get install -y xvfb
+```
+
+This lets Playwright open browser windows in a virtual framebuffer instead of a real screen.
+
+## Step 7: Daily Auto-Run (Cron)
+
+Set up a cron job to automatically run the auto-apply pipeline every day:
+
+```bash
+# Edit crontab
+crontab -e
+
+# Add this line (runs daily at 6:00 AM local time):
+0 6 * * * xvfb-run /path/to/claude --dangerously-skip-permissions -p '/auto-apply-v2' >> ~/Career/logs/auto-apply.log 2>&1
+```
+
+Create the logs directory:
+```bash
+mkdir -p ~/Career/logs
+```
+
+**How it works:**
+- `xvfb-run` — creates a temporary virtual display, then destroys it when done
+- `--dangerously-skip-permissions` — skips all tool confirmation prompts (fully autonomous)
+- `-p '/auto-apply-v2'` — passes the skill as the initial prompt
+- Logs output to `~/Career/logs/auto-apply.log`
+
+**Requirements:**
+- Server must be powered on at the scheduled time
+- Xvfb installed (`sudo apt-get install -y xvfb`)
+- Claude Code CLI authenticated (`claude` command works)
+- Playwright persistent profiles at `~/.playwright/profile-{1,2,3}/`
+
+**Useful commands:**
+```bash
+# View current cron schedule
+crontab -l
+
+# Watch logs in real time
+tail -f ~/Career/logs/auto-apply.log
+
+# Test run manually
+xvfb-run claude --dangerously-skip-permissions -p '/auto-apply-v2'
+
+# Remove the cron job
+crontab -r
+```
+
+**Note:** Playwright uses persistent browser profiles (`~/.playwright/profile-{1,2,3}/`) that retain cookies and login sessions across runs. Once you log into Google/Indeed/ATS portals in the first session, subsequent cron runs will reuse those sessions without re-authentication.
+
+## Step 8: Install Script Dependencies
 
 ```bash
 cd .claude/skills/auto-apply-v2/scripts
@@ -288,3 +344,12 @@ Workday uses React controlled components. The agent will try `form_input` first,
 
 ### ATS requires login but agent can't log in
 Log in manually in the browser first, then tell the agent to continue. Persistent browser profiles (via `--profile-dir`) will keep you logged in across sessions.
+
+### Cron job runs but Playwright crashes with "cannot open display"
+Install Xvfb and use `xvfb-run` in your crontab. See Step 6.
+
+### Cron job doesn't seem to run
+Check that the cron daemon is running: `systemctl status cron`. Verify your crontab: `crontab -l`. Check logs: `tail ~/Career/logs/auto-apply.log`.
+
+### Login sessions expired between cron runs
+Playwright persistent profiles keep cookies, but some ATS platforms expire sessions after days/weeks. The agent will auto-re-login using credentials from `secrets.md`. If Google Sign-In is configured, it typically persists for weeks.

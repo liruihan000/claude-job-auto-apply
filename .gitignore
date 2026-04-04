@@ -5,14 +5,17 @@
 **/credentials.*
 
 # Application records (contain personal info)
-Basic/applications/
+Basic/applications/*
+!Basic/applications/.gitkeep
+!Basic/applications/TRACKER.example.md
 
 # Archive (old resume versions)
 Basic/archive/
 
 # Resume templates (contain personal info)
-Basic/templates/*.docx
-Basic/templates/*.pdf
+Basic/templates/*
+!Basic/templates/.gitkeep
+!Basic/templates/README.md
 
 # User profile (contains personal info)
 .claude/skills/auto-apply-v2/references/user-profile.md
@@ -25,6 +28,10 @@ Basic/templates/*.pdf
 
 # Application tracker
 .claude/skills/auto-apply-v2/references/application-tracker.md
+
+# Logs
+logs/*
+!logs/.gitkeep
 
 # === Build / Runtime ===
 

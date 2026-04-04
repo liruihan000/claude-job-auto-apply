@@ -21,6 +21,14 @@ metadata:
 
 Every time this skill is invoked:
 
+0. Ensure required directories and files exist:
+   - `mkdir -p Career/Basic/applications Career/Basic/templates Career/logs`
+   - If `Career/Basic/applications/TRACKER.md` does not exist, create it with the header:
+     ```
+     # Job Application Tracker
+     | Date | Company | Role | Platform | Status | Submitted | Notes |
+     |------|---------|------|----------|--------|-----------|-------|
+     ```
 1. Read `Career/Basic/applications/TRACKER.md`
 2. Count `Submitted` column entries with today's date → `today_submitted`
 3. List ⬜ NOT SUBMITTED entries with materials ready
