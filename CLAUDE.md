@@ -4,26 +4,58 @@
 Automate job applications to reach **30 new submissions per day**. Every session should continue from where the last one left off.
 
 ## On Every Session Start (AUTO-EXECUTE)
+
+### Step 0: First-Run Setup Check
+Check if the project is configured. If ANY of these are missing, run the interactive setup wizard BEFORE doing anything else:
+
+1. **`.mcp.json`** does not exist → need Playwright config
+2. **`references/user-profile.md`** does not exist → need user profile
+3. **`references/secrets.md`** does not exist → need credentials
+4. **`Basic/templates/`** is empty (no .docx files) → need resume templates
+
+#### Setup Wizard (only runs if setup incomplete):
+
+**Ask the user (in their language):**
+
+1. "How many parallel browser instances? (1 = basic, 3 = recommended for batch mode)"
+   - Generate `.mcp.json` based on their answer:
+     - If 1: single `playwright` entry
+     - If 2-3: `playwright-1`, `playwright-2`, `playwright-3` with persistent profiles
+   - Always use `--profile-dir ~/.playwright/profile-{N}` for persistent login
+
+2. "Do you have a user-profile.md ready, or should I help you create one?"
+   - If no: copy from `user-profile.example.md`, then ask them to fill in their details
+   - If yes: verify the file exists
+
+3. "Do you have ATS login credentials configured?"
+   - If no: copy from `secrets.example.md`, ask them to fill in email/password
+
+4. "Place your resume template (.docx) in Basic/templates/ — do you have one ready?"
+   - If no: explain they need at least one .docx resume to start
+
+5. Create any missing directories: `mkdir -p Basic/applications Basic/templates logs`
+
+6. If `Basic/applications/TRACKER.md` doesn't exist, create it with the header.
+
+After setup is complete, report "Setup complete!" and continue to Step 1.
+
+### Step 1: Auto-Apply Check
 1. Read `Basic/applications/TRACKER.md` — this is the single source of truth
 2. Count today's ✅ SUBMITTED entries → `today_submitted`
 3. If `today_submitted >= 30` → report "今日目标已完成" and stop
 4. If `today_submitted < 30` → immediately invoke `/auto-apply-v2` to enter the auto-apply loop
 5. **Do NOT wait for user instructions** — start working automatically
 
-## Parallel Execution with 3 Playwright Instances
-Three isolated browser instances are available:
-- `mcp__playwright-1__*` — persistent profile at `~/.playwright/profile-1`
-- `mcp__playwright-2__*` — persistent profile at `~/.playwright/profile-2`
-- `mcp__playwright-3__*` — persistent profile at `~/.playwright/profile-3`
+## Parallel Execution with Playwright Instances
+Read `.mcp.json` to detect how many Playwright instances are available:
+- If 1 instance (`playwright`): submit jobs sequentially using `mcp__playwright__*`
+- If 3 instances (`playwright-1/2/3`): submit up to 3 jobs in parallel
 
 **Workflow:**
 1. Main agent searches Indeed for matching jobs + checks pending (⬜) applications
-2. Prepares up to 3 jobs (creates folders, tailors resumes if needed)
-3. Launches 3 subagents in parallel using the Agent tool (run_in_background: true):
-   - Subagent A → `mcp__playwright-1__*`
-   - Subagent B → `mcp__playwright-2__*`
-   - Subagent C → `mcp__playwright-3__*`
-4. Waits for all 3 to complete → updates TRACKER.md
+2. Prepares up to N jobs (N = number of Playwright instances)
+3. Launches N subagents in parallel using the Agent tool (run_in_background: true)
+4. Waits for all N to complete → updates TRACKER.md
 5. Repeats until `today_submitted == 30`
 
 Use the subagent prompt template in `.claude/skills/auto-apply-v2/SKILL.md` (Auto-Apply Loop section).
@@ -41,7 +73,7 @@ Use the subagent prompt template in `.claude/skills/auto-apply-v2/SKILL.md` (Aut
 - Skill definition: `.claude/skills/auto-apply-v2/SKILL.md`
 
 ## Tools
-- **Browser**: Use Playwright (`mcp__playwright-{1,2,3}__*`) for browser automation
+- **Browser**: Use Playwright (`mcp__playwright*`) for browser automation
 - **Email**: Use Gmail MCP for checking verification emails
 - **Job search**: Use Indeed MCP (`mcp__claude_ai_Indeed__*`) for finding jobs
 

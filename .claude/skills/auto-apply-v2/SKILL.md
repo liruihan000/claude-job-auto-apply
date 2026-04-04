@@ -11,9 +11,11 @@ metadata:
 
 # Auto-Apply V3
 
-> **Playwright instances** (3 parallel browsers with persistent profiles):
-> - `mcp__playwright-1__*`, `mcp__playwright-2__*`, `mcp__playwright-3__*`
-> Tools: `browser_snapshot`, `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_press_key`, `browser_evaluate`, `browser_take_screenshot`, `browser_wait_for`, `browser_tabs`, `browser_hover`
+> **Playwright instances** (adaptive — reads `.mcp.json` to detect available browsers):
+> - If 3 instances configured: `mcp__playwright-1__*`, `mcp__playwright-2__*`, `mcp__playwright-3__*`
+> - If 1 instance configured: `mcp__playwright__*` (sequential mode)
+> - Read `.mcp.json` at startup to determine instance count and tool prefixes
+> Tools per instance: `browser_snapshot`, `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_press_key`, `browser_evaluate`, `browser_take_screenshot`, `browser_wait_for`, `browser_tabs`, `browser_hover`
 
 ---
 
