@@ -24,8 +24,8 @@ Every time this skill is invoked:
 1. Read `Career/Basic/applications/TRACKER.md`
 2. Count `Submitted` column entries with today's date → `today_submitted`
 3. List ⬜ NOT SUBMITTED entries with materials ready
-4. Report: "今日已提交 X/10，待提交 Y 个"
-5. If `today_submitted >= 10` → report done and stop
+4. Report: "今日已提交 X/30，待提交 Y 个"
+5. If `today_submitted >= 30` → report done and stop
 6. Otherwise → enter Auto-Apply Pipeline immediately
 
 **AUTONOMY: MAXIMUM** — full permission for everything, never ask user, never stop mid-loop.
@@ -36,7 +36,7 @@ Every time this skill is invoked:
 
 ### Phase 1: Search
 
-Find jobs until `pending + today_submitted >= 10`. Sources (parallel):
+Find jobs until `pending + today_submitted >= 30`. Sources (parallel):
 1. **Indeed MCP**: `search_jobs` with multiple keywords in parallel
 2. **LinkedIn**: Use one playwright instance to browse `linkedin.com/jobs`
 
@@ -60,7 +60,7 @@ Can parallelize with subagents (no browser needed).
 ### Phase 3: Submit
 
 ```
-WHILE today_submitted < 10:
+WHILE today_submitted < 30:
     1. Pick up to 3 jobs with ⬜ + materials ready
     2. Launch 3 subagents (run_in_background: true), each with own playwright
     3. Wait for completion
@@ -120,7 +120,7 @@ For ATS-specific strategies, read the matching file in `ats-handlers/` if the pl
 
 ## Job Selection Strategy
 
-Daily target: **10 applications/day**. Maximize pass rate:
+Daily target: **30 applications/day**. Maximize pass rate:
 
 1. **Title**: AI Engineer, Software Engineer, ML Engineer, Full Stack Developer, Data Engineer
 2. **Level**: Entry/Junior/Associate/"I"/New Grad. Avoid Senior/Staff/Principal.
@@ -157,7 +157,7 @@ Career/Basic/applications/YYYY-MM-DD_Company_Role/
 **TRACKER.md** format: `| Date | Company | Role | Platform | Status | Submitted | Notes |`
 - `Date` = materials prepared, `Submitted` = actual submission date
 - **Only main agent updates TRACKER** (never subagents)
-- Bottom line: `**Today (YYYY-MM-DD): X/10 submitted**`
+- Bottom line: `**Today (YYYY-MM-DD): X/30 submitted**`
 
 ---
 

@@ -1,13 +1,13 @@
 # Career Project — Claude Code Instructions
 
 ## Primary Goal
-Automate job applications to reach **10 new submissions per day**. Every session should continue from where the last one left off.
+Automate job applications to reach **30 new submissions per day**. Every session should continue from where the last one left off.
 
 ## On Every Session Start (AUTO-EXECUTE)
 1. Read `Basic/applications/TRACKER.md` — this is the single source of truth
 2. Count today's ✅ SUBMITTED entries → `today_submitted`
-3. If `today_submitted >= 10` → report "今日目标已完成" and stop
-4. If `today_submitted < 10` → immediately invoke `/auto-apply-v2` to enter the auto-apply loop
+3. If `today_submitted >= 30` → report "今日目标已完成" and stop
+4. If `today_submitted < 30` → immediately invoke `/auto-apply-v2` to enter the auto-apply loop
 5. **Do NOT wait for user instructions** — start working automatically
 
 ## Parallel Execution with 3 Playwright Instances
@@ -24,7 +24,7 @@ Three isolated browser instances are available:
    - Subagent B → `mcp__playwright-2__*`
    - Subagent C → `mcp__playwright-3__*`
 4. Waits for all 3 to complete → updates TRACKER.md
-5. Repeats until `today_submitted == 10`
+5. Repeats until `today_submitted == 30`
 
 Use the subagent prompt template in `.claude/skills/auto-apply-v2/SKILL.md` (Auto-Apply Loop section).
 
