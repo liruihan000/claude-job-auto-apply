@@ -47,17 +47,17 @@ Every time this skill is invoked:
 
 Find jobs until `pending + today_submitted >= config.daily_target`.
 
-Search `config.search.platforms` in parallel per `references/search-guide.md`.
-Filter per `references/selection-strategy.md`. Deduplicate. Add selected jobs to TRACKER.md as ⬜.
+Search `config.search.platforms` in parallel per `${CLAUDE_SKILL_DIR}/references/search-guide.md`.
+Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate. Add selected jobs to TRACKER.md as ⬜.
 
 ### Phase 2: Prepare
 
 For each ⬜ job without materials:
 1. Create folder: `applications/YYYY-MM-DD_Company_Role/`
 2. Read `user-profile.md` for experience pool
-3. Select template per `references/template-guide.md`
-4. Tailor resume per `references/tailoring-guide.md`
-5. Generate cover letter per `references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
+3. Select template per `${CLAUDE_SKILL_DIR}/references/template-guide.md`
+4. Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
+5. Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
 6. Generate PDFs via bundled scripts
 7. Write `notes.md` + `STATUS.md` (⬜)
 
@@ -81,7 +81,7 @@ Report: "Done: X/{config.daily_target} submitted"
 ### Phase 4: Retrospective (after daily target met or session end)
 
 Check subagent return messages for `FRICTION:` lines:
-1. **New ATS + friction** → create `ats-handlers/{platform}.md` with the workaround
+1. **New ATS + friction** → create `${CLAUDE_SKILL_DIR}/ats-handlers/{platform}.md` with the workaround
 2. **Known ATS + friction** → append fix as one bullet to existing handler
 3. **No friction lines** → skip, no update needed
 
@@ -105,9 +105,9 @@ Prepare application materials for {COMPANY} — {ROLE}.
 
 **Step 1 — Prepare materials:**
 Read `user-profile.md` for experience pool.
-Select template per `references/template-guide.md`.
-Tailor resume per `references/tailoring-guide.md` — use the full JD and company info.
-Generate cover letter per `references/cover-letter-guide.md` — reference specific company details.
+Select template per `${CLAUDE_SKILL_DIR}/references/template-guide.md`.
+Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` — use the full JD and company info.
+Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` — reference specific company details.
 
 **Rules:**
 1. Create folder {APP_FOLDER} if it doesn't exist
@@ -139,7 +139,7 @@ Submit application to {COMPANY} — {ROLE}.
 **Application folder**: {APP_FOLDER}
 
 Read `user-profile.md` for experience dates/titles/EEO defaults.
-For ATS-specific strategies, read the matching file in `ats-handlers/` if the platform is recognized (workday.md, greenhouse.md, lever.md, indeed.md, taleo.md, oracle.md, etc).
+For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-handlers/` if the platform is recognized (workday.md, greenhouse.md, lever.md, indeed.md, taleo.md, oracle.md, etc).
 
 **Contact info & form-fill data:** Read `user-profile.md`
 **Credentials & login:** Read `secrets.md`
@@ -164,12 +164,12 @@ For ATS-specific strategies, read the matching file in `ats-handlers/` if the pl
 
 ## References
 
-- **Job search**: `references/search-guide.md` — platform methods, deduplication
-- **Job selection**: `references/selection-strategy.md` — filters, prioritization
-- **Resume tailoring**: `references/tailoring-guide.md` — 8-step checklist
-- **Cover letter**: `references/cover-letter-guide.md` — structure, rules
-- **Template selection**: `references/template-guide.md` — which template for which JD
-- **Filing & tracking**: `references/filing-guide.md` — folder structure, TRACKER format
+- **Job search**: `${CLAUDE_SKILL_DIR}/references/search-guide.md` — platform methods, deduplication
+- **Job selection**: `${CLAUDE_SKILL_DIR}/references/selection-strategy.md` — filters, prioritization
+- **Resume tailoring**: `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` — 8-step checklist
+- **Cover letter**: `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` — structure, rules
+- **Template selection**: `${CLAUDE_SKILL_DIR}/references/template-guide.md` — which template for which JD
+- **Filing & tracking**: `${CLAUDE_SKILL_DIR}/references/filing-guide.md` — folder structure, TRACKER format
 - **User profile**: `user-profile.md` — experience pool, contact info, EEO
 - **Credentials**: `secrets.md` — ATS login, registration, Google Sign-In
 
@@ -183,4 +183,4 @@ For ATS-specific strategies, read the matching file in `ats-handlers/` if the pl
 - **On error**: retry up to `config.submit.max_retries_per_form` times, then skip and log reason.
 - **Never stop** until daily target is met.
 - Match user's language (see `config.preferences.response_language`).
-- **Self-updating**: When user requests a new search platform, ATS handler, or config change, update the corresponding files immediately (`config.json`, `references/search-guide.md`, `ats-handlers/*.md`) — don't ask user to edit manually.
+- **Self-updating**: When user requests a new search platform, ATS handler, or config change, update the corresponding files immediately (`config.json`, `${CLAUDE_SKILL_DIR}/references/search-guide.md`, `${CLAUDE_SKILL_DIR}/ats-handlers/*.md`) — don't ask user to edit manually.
