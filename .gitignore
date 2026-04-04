@@ -1,9 +1,11 @@
-# === Auto-Generated (by bootstrap) ===
+# === Auto-Generated (by bootstrap/setup) ===
 CLAUDE.md
 AGENTS.md
 GEMINI.md
 .cursorrules
 .github/copilot-instructions.md
+config.json
+blog-post-linkedin.md
 
 # === Personal Data (DO NOT COMMIT) ===
 

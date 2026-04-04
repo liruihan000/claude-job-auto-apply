@@ -16,7 +16,7 @@ metadata:
 
 # Job Auto-Apply
 
-> **Configuration**: On startup, run `node .claude/skills/job-auto-apply/scripts/detect_config.js` to load all runtime parameters:
+> **Configuration**: On startup, run `node .claude/skills/job-auto-apply/scripts/bootstrap.js` to load all runtime parameters:
 > - `daily_target` — how many applications per day (default: 30)
 > - `playwright.count` — number of parallel browser instances (N)
 > - `playwright.instances[].prefix` — tool prefix for each instance (e.g. `mcp__playwright-1__`)
