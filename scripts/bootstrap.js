@@ -2,16 +2,18 @@
 
 /**
  * Bootstrap check — detects what's configured and what's missing.
- * Run once on skill startup. Output tells Claude what to do next.
+ * All paths are relative to the skill directory (self-contained).
  *
- * Usage: node .claude/skills/job-auto-apply/scripts/bootstrap.js
+ * Usage: node scripts/bootstrap.js (or node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js)
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const root = path.resolve(__dirname, '../../../..');
-const skillDir = path.resolve(__dirname, '..');
+// When installed via npx skills, ${CLAUDE_SKILL_DIR} points to the skill root.
+// When run from scripts/, the skill root is one level up.
+const skillDir = process.env.CLAUDE_SKILL_DIR || path.resolve(__dirname, '..');
+const root = skillDir;
 const ref = path.join(skillDir, 'references');
 
 const missing = [];
@@ -19,8 +21,8 @@ const warnings = [];
 
 // --- Required files ---
 
-// config.json
-const configPath = path.join(root, 'config.json');
+// config.json (in skill dir)
+const configPath = path.join(skillDir, 'config.json');
 let config = {};
 if (fs.existsSync(configPath)) {
   config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -28,7 +30,7 @@ if (fs.existsSync(configPath)) {
   missing.push('config.json');
 }
 
-// .mcp.json
+// .mcp.json (in project root — needed for agent runtime)
 const mcpPath = path.join(root, '.mcp.json');
 let playwrightInstances = [];
 if (fs.existsSync(mcpPath)) {
@@ -57,34 +59,32 @@ if (!fs.existsSync(path.join(ref, 'secrets.md'))) {
   missing.push('secrets.md');
 }
 
-// templates
-const templatesDir = path.join(root, 'Basic', 'templates');
+// templates (in skill dir)
+const templatesDir = path.join(skillDir, 'templates');
 let templateCount = 0;
 if (fs.existsSync(templatesDir)) {
   templateCount = fs.readdirSync(templatesDir).filter(f => f.endsWith('.docx')).length;
 }
 if (templateCount === 0) {
-  missing.push('resume templates (no .docx in Basic/templates/)');
+  missing.push('resume templates (no .docx in skill templates/)');
 }
 
-// CLAUDE.md
-if (!fs.existsSync(path.join(root, 'CLAUDE.md'))) {
-  missing.push('CLAUDE.md');
-}
-
-// --- Directories (auto-create) ---
-const dirs = ['Basic/applications', 'Basic/templates', 'logs'];
+// --- Directories (auto-create within skill dir) ---
+const dirs = [
+  path.join(skillDir, 'applications'),
+  path.join(skillDir, 'templates'),
+  path.join(skillDir, 'logs'),
+];
 const created = [];
 for (const d of dirs) {
-  const full = path.join(root, d);
-  if (!fs.existsSync(full)) {
-    fs.mkdirSync(full, { recursive: true });
-    created.push(d);
+  if (!fs.existsSync(d)) {
+    fs.mkdirSync(d, { recursive: true });
+    created.push(path.relative(root, d));
   }
 }
 
 // TRACKER.md
-const trackerPath = path.join(root, 'Basic', 'applications', 'TRACKER.md');
+const trackerPath = path.join(skillDir, 'applications', 'TRACKER.md');
 if (!fs.existsSync(trackerPath)) {
   fs.writeFileSync(trackerPath, `# Job Application Tracker
 
@@ -96,27 +96,30 @@ if (!fs.existsSync(trackerPath)) {
   created.push('TRACKER.md');
 }
 
+// --- Agent instruction file (CLAUDE.md etc — in project root) ---
+const agentFiles = ['CLAUDE.md', 'AGENTS.md', 'GEMINI.md'];
+const hasAgentFile = agentFiles.some(f => fs.existsSync(path.join(root, f)));
+if (!hasAgentFile) {
+  missing.push('agent instruction file (CLAUDE.md / AGENTS.md)');
+}
+
 // --- Cron / automation detection ---
 const { execSync } = require('child_process');
 let cronConfigured = false;
 try {
   const crontab = execSync('crontab -l 2>/dev/null', { encoding: 'utf8' });
   cronConfigured = crontab.includes('job-auto-apply');
-} catch (e) {
-  // no crontab
-}
+} catch (e) {}
 
-// Xvfb available?
 let hasXvfb = false;
 try {
   execSync('which xvfb-run', { encoding: 'utf8' });
   hasXvfb = true;
 } catch (e) {}
 
-// Has display?
 const hasDisplay = !!process.env.DISPLAY;
 
-// --- Warnings (optional but recommended) ---
+// --- Warnings ---
 warnings.push('Check if Gmail MCP is connected (needed for email verification)');
 warnings.push('Check if Indeed MCP is connected (needed for job search)');
 
@@ -126,6 +129,13 @@ const result = {
   missing,
   created,
   warnings,
+  paths: {
+    skill: path.relative(root, skillDir),
+    templates: path.relative(root, path.join(skillDir, 'templates')),
+    applications: path.relative(root, path.join(skillDir, 'applications')),
+    tracker: path.relative(root, trackerPath),
+    logs: path.relative(root, path.join(skillDir, 'logs')),
+  },
   config: {
     daily_target: config.daily_target || 30,
     job_search: config.job_search || null,

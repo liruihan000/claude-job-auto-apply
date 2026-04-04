@@ -16,7 +16,7 @@ metadata:
 
 # Job Auto-Apply
 
-> **Configuration**: On startup, run `node .claude/skills/job-auto-apply/scripts/bootstrap.js` to load all runtime parameters:
+> **Configuration**: On startup, run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` to load all runtime parameters:
 > - `daily_target` — how many applications per day (default: 30)
 > - `playwright.count` — number of parallel browser instances (N)
 > - `playwright.instances[].prefix` — tool prefix for each instance (e.g. `mcp__playwright-1__`)
@@ -24,7 +24,7 @@ metadata:
 > - `application` — tracker path, cover letter required, max retries
 > - `automation` — sponsorship skip, auto-agree, etc.
 >
-> All phases below use these values. To change any setting, edit `config.json` in the project root.
+> All phases below use these values. To change any setting, edit `${CLAUDE_SKILL_DIR}/config.json`.
 > Tools per Playwright instance: `browser_snapshot`, `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_press_key`, `browser_evaluate`, `browser_take_screenshot`, `browser_wait_for`, `browser_tabs`, `browser_hover`
 
 ---
@@ -34,14 +34,14 @@ metadata:
 Every time this skill is invoked:
 
 0. Ensure required directories and files exist:
-   - `mkdir -p Career/Basic/applications Career/Basic/templates Career/logs`
-   - If `Career/Basic/applications/TRACKER.md` does not exist, create it with the header:
+   - `mkdir -p ${CLAUDE_SKILL_DIR}/applications ${CLAUDE_SKILL_DIR}/templates Career/logs`
+   - If `${CLAUDE_SKILL_DIR}/applications/TRACKER.md` does not exist, create it with the header:
      ```
      # Job Application Tracker
      | Date | Company | Role | Platform | Status | Submitted | Notes |
      |------|---------|------|----------|--------|-----------|-------|
      ```
-1. Read `Career/Basic/applications/TRACKER.md`
+1. Read `${CLAUDE_SKILL_DIR}/applications/TRACKER.md`
 2. Count `Submitted` column entries with today's date → `today_submitted`
 3. List ⬜ NOT SUBMITTED entries with materials ready
 4. Report: "今日已提交 X/{daily_target}，待提交 Y 个"
@@ -68,7 +68,7 @@ Filter using **Job Selection Strategy** (below). Add selected jobs to TRACKER.md
 ### Phase 2: Prepare
 
 For each ⬜ job without materials:
-1. Create folder: `Career/Basic/applications/YYYY-MM-DD_Company_Role/`
+1. Create folder: `${CLAUDE_SKILL_DIR}/applications/YYYY-MM-DD_Company_Role/`
 2. Read `references/user-profile.md` + `references/template-guide.md`
 3. Tailor resume (8-step checklist — see `references/user-profile.md` Tailoring Checklist)
 4. Generate cover letter (**MANDATORY** for every application)
@@ -165,7 +165,7 @@ Read `references/secrets.md` for login credentials (email/username, password, pr
 
 Application folder structure:
 ```
-Career/Basic/applications/YYYY-MM-DD_Company_Role/
+${CLAUDE_SKILL_DIR}/applications/YYYY-MM-DD_Company_Role/
 ├── resume.pdf + resume.docx
 ├── cover_letter.pdf + cover_letter.docx
 ├── notes.md (company, role, date, platform, tailoring decisions, job URL)

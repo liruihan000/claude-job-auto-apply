@@ -5,7 +5,7 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`. Guide 
 ## For each missing item:
 
 ### `config.json`
-Create in project root with defaults. Ask user to customize:
+Create in `${CLAUDE_SKILL_DIR}/config.json`. Ask user to customize:
 ```json
 {
   "daily_target": 30,
@@ -55,7 +55,7 @@ Copy from `references/secrets.example.md`.
 Tell user: "Fill in your email and default password for ATS portals. Prefer Google Sign-In if possible."
 
 ### Resume templates
-Tell user: "Place at least one .docx resume file in Basic/templates/. Start with one general resume — the AI will tailor it per application."
+Tell user: "Place at least one .docx resume file in `${CLAUDE_SKILL_DIR}/templates/`. Start with one general resume — the AI will tailor it per application."
 
 ### `CLAUDE.md`
 Auto-generate in project root:
@@ -63,9 +63,9 @@ Auto-generate in project root:
 # Auto-Apply Project
 
 ## On Every Session Start (AUTO-EXECUTE)
-1. Run `node .claude/skills/job-auto-apply/scripts/bootstrap.js` to check config
+1. Run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` to check config
 2. If ready: read TRACKER.md, count today's submissions, invoke `/job-auto-apply` if below target
-3. If not ready: read `.claude/skills/job-auto-apply/SETUP.md` and guide user through setup
+3. If not ready: read `${CLAUDE_SKILL_DIR}/SETUP.md` and guide user through setup
 4. **Do NOT wait for user instructions** — start working automatically
 
 ## Autonomy
@@ -75,9 +75,9 @@ Auto-generate in project root:
 
 ## Key References
 - Config: `config.json`
-- Skill: `.claude/skills/job-auto-apply/SKILL.md`
-- User profile: `.claude/skills/job-auto-apply/references/user-profile.md`
-- Tracker: `Basic/applications/TRACKER.md`
+- Skill: `${CLAUDE_SKILL_DIR}/SKILL.md`
+- User profile: `${CLAUDE_SKILL_DIR}/references/user-profile.md`
+- Tracker: `${CLAUDE_SKILL_DIR}/applications/TRACKER.md`
 ```
 
 ### MCP Connectors

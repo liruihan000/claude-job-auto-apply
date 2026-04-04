@@ -4,56 +4,27 @@ AGENTS.md
 GEMINI.md
 .cursorrules
 .github/copilot-instructions.md
+.mcp.json
 config.json
-blog-post-linkedin.md
 
-# === Personal Data (DO NOT COMMIT) ===
+# === User data (generated at runtime) ===
+applications/*
+!applications/EXAMPLE_*/
+!applications/TRACKER.example.md
+templates/*.docx
+templates/*.pdf
+logs/
+references/user-profile.md
+references/secrets.md
+references/configs/
 
-# Credentials
-**/credentials.md
-**/credentials.*
-
-# Application records (contain personal info)
-Basic/applications/*
-!Basic/applications/.gitkeep
-!Basic/applications/TRACKER.example.md
-!Basic/applications/EXAMPLE_*/
-
-# Archive (old resume versions)
-Basic/archive/
-
-# Resume templates (contain personal info)
-Basic/templates/*
-!Basic/templates/.gitkeep
-!Basic/templates/README.md
-
-# User profile (contains personal info)
-.claude/skills/job-auto-apply/references/user-profile.md
-
-# Secrets (credentials/passwords)
-.claude/skills/job-auto-apply/references/secrets.md
-
-# Resume/cover letter configs (contain personal info)
-.claude/skills/job-auto-apply/references/configs/
-
-# Application tracker
-.claude/skills/job-auto-apply/references/application-tracker.md
-
-# Logs
-logs/*
-!logs/.gitkeep
+# === Legacy paths ===
+Basic/
+.claude/
 
 # === Build / Runtime ===
-
-# Screenshots
 **/*.png
-
-# Playwright MCP cache
 .playwright-mcp/
-
-# Node modules
 node_modules/
-
-# OS files
 .DS_Store
 Thumbs.db
