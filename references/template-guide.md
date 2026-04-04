@@ -1,67 +1,42 @@
-# Resume Template Library
+# Resume Template Selection Guide
 
 ## Location
 
-Templates are stored at `Career/Basic/templates/` in the user's workspace folder.
+Templates are stored in `${CLAUDE_SKILL_DIR}/templates/`.
 
-## Available Templates
+## How It Works
 
-| File               | Target Roles                                        | Key Differentiators                                      |
-|--------------------|-----------------------------------------------------|----------------------------------------------------------|
-| `fullstack-ai`     | Full-stack, AI engineer, startup, LLM roles          | Includes S&Y BI experience, broadest coverage            |
-| `backend`          | Backend engineer, distributed systems, APIs          | GCP metrics (p99 <150ms), microservices focus             |
-| `platform-infra`   | Platform, infrastructure, DevOps, SRE, K8s           | Terraform, K8s, observability stack, MTTR metrics        |
-| `ai-ml-infra`      | AI/ML infrastructure, MLOps, model serving           | RAG pipelines, LLM serving, vector DBs, embedding focus  |
-| `general-swe`      | Generic SWE, unclear specialization                  | Balanced, no specific tilt                               |
+Place one or more `.docx` resume files in the templates folder. The agent selects the best match for each job based on the JD keywords.
 
-Each template has both `.docx` and `.pdf` versions.
+If you only have one template, the agent uses it for everything and tailors the content per JD.
 
-## Selection Guide
+## Recommended Template Strategy
 
-| Job description mentions...                          | Start with       |
-|------------------------------------------------------|------------------|
-| React, Next.js, full-stack, AI, LLM, startup         | `fullstack-ai`   |
-| Backend, APIs, microservices, distributed systems     | `backend`        |
-| Platform, infrastructure, DevOps, SRE, K8s, Terraform | `platform-infra` |
-| ML infra, MLOps, AI platform, model serving, RAG      | `ai-ml-infra`    |
-| Generic SWE, unclear specialization                   | `general-swe`    |
+Create templates by target role direction. Name them descriptively:
 
-## Key Differences Between Templates
+| Template name | Best for JDs mentioning... |
+|---------------|---------------------------|
+| `fullstack-ai.docx` | React, Next.js, full-stack, AI, LLM, startup |
+| `backend.docx` | Backend, APIs, microservices, distributed systems |
+| `platform-infra.docx` | Platform, DevOps, SRE, K8s, Terraform |
+| `ai-ml-infra.docx` | ML infra, MLOps, AI platform, model serving, RAG |
+| `general-swe.docx` | Generic SWE, unclear specialization |
 
-### Summary positioning
-- `fullstack-ai`: Full-stack + AI, startup cofounder angle
-- `backend`: Backend engineer, distributed systems, high-concurrency
-- `platform-infra`: Platform engineer, cloud-native, reliability
-- `ai-ml-infra`: AI/ML infrastructure, production ML systems
-- `general-swe`: Backend/platform-focused, broad
+## How the Agent Tailors
 
-### Skills section order
-Each template leads with the most relevant skill category for its target roles.
+For each application, the agent:
 
-### Livins AI title
-- `fullstack-ai`: "AI Engineer (Cofounder)"
-- `backend`: "Founding AI Engineer (part-time)"
-- `platform-infra`: "Founding AI Engineer"
-- `ai-ml-infra`: "Founding Engineer & Technical Lead"
-- `general-swe`: "Founding Software Engineer (Cofounder)"
+1. **Selects template** — picks the closest match based on JD keywords
+2. **Rewrites summary** — 2-3 sentences mirroring the job posting
+3. **Mirrors keywords** — extracts top 10-15 from JD, ensures each appears in resume
+4. **Reorders experiences** — most relevant role first
+5. **Cherry-picks bullets** — 3-4 most relevant per role
+6. **Adjusts skills section** — reorders so most relevant category leads
+7. **Includes/excludes roles** — based on relevance and space
+8. **Verifies 1-page fit** — cuts least relevant content if overflow
 
-### S&Y Technology inclusion
-Only `fullstack-ai` includes S&Y Technology by default. Other templates omit it for space.
+## Tips
 
-### Metrics emphasis
-- `backend` and `platform-infra` have GCP-specific metrics (p99 latency, MTTR, 99.9% uptime, Terraform IaC)
-- `ai-ml-infra` has ML-specific metrics (hallucination reduction, data integrity percentages)
-- `fullstack-ai` and `general-swe` have general engineering metrics
-
-## Application Filing Structure
-
-After each application, save tailored materials to:
-
-```
-Career/Basic/applications/YYYY-MM-DD_CompanyName_RoleShorthand/
-├── resume.pdf
-├── resume.docx
-├── cover_letter.pdf
-├── cover_letter.docx
-└── notes.md
-```
+- Each template should represent a different **angle**, not different content
+- Same experience pool, different emphasis and ordering
+- The agent handles the tailoring — you provide the raw material
