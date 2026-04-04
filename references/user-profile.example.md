@@ -49,3 +49,12 @@ Categorize your skills. The auto-apply system will reorder these based on JD rel
 - **Cloud & Infra**: AWS, GCP, Docker, Kubernetes, etc.
 - **AI & Data**: PyTorch, TensorFlow, SQL, etc.
 - **Tools**: Git, CI/CD, Terraform, etc.
+
+## EEO / Demographics Defaults
+
+Used to auto-fill equal opportunity forms during applications.
+
+- **Gender**: Male / Female / Non-binary / Prefer not to say
+- **Race/Ethnicity**: Asian / White / Black / Hispanic / Prefer not to say
+- **Veteran Status**: I am not a protected veteran / I am a protected veteran
+- **Disability Status**: I do not want to answer / Yes / No
