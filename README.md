@@ -82,29 +82,17 @@ npm install -g @anthropic-ai/claude-code
 
 Or see [claude.ai/code](https://claude.ai/code) for other install methods (Desktop app, VS Code extension, etc.)
 
-### 2. Clone & Configure
+### 2. Clone & Run
 
 ```bash
 git clone https://github.com/liruihan000/claude-job-auto-apply.git ~/Career
 cd ~/Career
-
-# Copy example configs and fill with your info
-cp .claude/skills/auto-apply-v2/references/user-profile.example.md \
-   .claude/skills/auto-apply-v2/references/user-profile.md
-cp .claude/skills/auto-apply-v2/references/secrets.example.md \
-   .claude/skills/auto-apply-v2/references/secrets.md
-
-# Add your resume (.docx) to Basic/templates/
-```
-
-### 3. Run
-
-```bash
-cd ~/Career
 claude --dangerously-skip-permissions
 ```
 
-The `--dangerously-skip-permissions` flag enables full autonomy — no confirmation prompts. The agent auto-starts on launch. For the full setup guide (Playwright config, daily cron, headless servers), see **[INSTALL.md](INSTALL.md)**.
+That's it. The agent detects missing configs on first launch and **interactively guides you through setup** — Playwright browsers, your profile, credentials, resume templates, and MCP connectors.
+
+For advanced setup (daily cron, headless servers), see **[INSTALL.md](INSTALL.md)**.
 
 ---
 
