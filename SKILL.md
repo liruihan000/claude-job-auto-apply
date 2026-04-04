@@ -95,22 +95,28 @@ Replace `{variables}`, pass to Agent tool:
 Prepare application materials for {COMPANY} — {ROLE}.
 
 **Job URL**: {JOB_URL}
-**Job Description**: {JOB_DESCRIPTION}
 **Application folder**: {APP_FOLDER}
 
+**Step 0 — Research:**
+1. Navigate to {JOB_URL} using WebFetch or Playwright and read the FULL job description
+2. Find the company website (usually linked in the JD or search "{COMPANY} about")
+3. Read the company's About/Mission page — note: industry, product, size, stage, culture
+4. Save all findings for use in resume tailoring and cover letter
+
+**Step 1 — Prepare materials:**
 Read `references/user-profile.md` for experience pool.
 Select template per `references/template-guide.md`.
-Tailor resume per `references/tailoring-guide.md`.
-Generate cover letter per `references/cover-letter-guide.md`.
+Tailor resume per `references/tailoring-guide.md` — use the full JD and company info.
+Generate cover letter per `references/cover-letter-guide.md` — reference specific company details.
 
 **Rules:**
 1. Create folder {APP_FOLDER} if it doesn't exist
-2. Read the full JD — understand what the company needs
+2. Research FIRST — read original JD from source + company info before any tailoring
 3. Select the best matching resume template
 4. Follow every step of the tailoring checklist
 5. Write resume.md (tailored resume content)
-6. Write cover_letter.md (if config.prepare.cover_letter_required)
-7. Write notes.md with: company, role, URL, template used, keywords mirrored, tailoring decisions
+6. Write cover_letter.md (if config.prepare.cover_letter_required) — must reference specific company/product details from research
+7. Write notes.md with: company info, role, URL, template used, keywords mirrored, tailoring decisions, company research summary
 8. Write STATUS.md as ⬜ NOT SUBMITTED
 9. Do NOT submit anything — only prepare materials
 10. Do NOT fabricate experience — only use info from user-profile.md

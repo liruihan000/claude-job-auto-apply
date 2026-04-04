@@ -15,10 +15,10 @@ This guide is read by the agent during Phase 2 (Prepare). Only generates if `con
 - Include specific accomplishments with metrics
 - Mirror 2-3 JD keywords naturally
 
-### Paragraph 3: Additional Value
-- Second relevant experience, project, or skill set
-- Show breadth — cover a different JD requirement than paragraph 2
-- If company has a notable mission/product, reference it specifically
+### Paragraph 3: Company Connection + Additional Value
+- Reference something specific about the company (product, mission, recent news, tech stack) — sourced from company research in Step 0
+- Connect a second relevant experience or project to this company-specific context
+- Show you've done your homework — generic "I admire your company" is worse than nothing
 
 ### Paragraph 4: Close
 - Express enthusiasm for the specific company (not generic)
