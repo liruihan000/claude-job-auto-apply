@@ -11,10 +11,12 @@ metadata:
 
 # Auto-Apply V3
 
-> **Playwright instances** (adaptive — reads `.mcp.json` to detect available browsers):
-> - If 3 instances configured: `mcp__playwright-1__*`, `mcp__playwright-2__*`, `mcp__playwright-3__*`
-> - If 1 instance configured: `mcp__playwright__*` (sequential mode)
-> - Read `.mcp.json` at startup to determine instance count and tool prefixes
+> **Playwright instances** (adaptive):
+> On startup, read `.mcp.json` to detect available Playwright instances.
+> Set `N` = number of playwright entries found. Collect their tool prefixes into a list:
+> - Single entry `"playwright"` → prefix = `mcp__playwright__`, N = 1
+> - Numbered entries `"playwright-1"`, `"playwright-2"`, ... → prefixes = `mcp__playwright-1__`, `mcp__playwright-2__`, ..., N = count
+> All phases below use `N` for parallelism. Subagent template uses the corresponding prefix.
 > Tools per instance: `browser_snapshot`, `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_press_key`, `browser_evaluate`, `browser_take_screenshot`, `browser_wait_for`, `browser_tabs`, `browser_hover`
 
 ---
@@ -71,15 +73,15 @@ Can parallelize with subagents (no browser needed).
 
 ```
 WHILE today_submitted < 30:
-    1. Pick up to 3 jobs with ⬜ + materials ready
-    2. Launch 3 subagents (run_in_background: true), each with own playwright
+    1. Pick up to N jobs with ⬜ + materials ready (N = Playwright instance count)
+    2. Launch N subagents (run_in_background: true), each assigned a unique Playwright prefix
     3. Wait for completion
     4. Main agent updates TRACKER.md:
        SUCCESS → ✅, fill Submitted date, today_submitted++
        FAILED → ❌ SKIPPED with reason
     5. If more pending → repeat. If none → back to Phase 1.
 END WHILE
-Report: "今日已完成 10/10"
+Report: "今日已完成 X/30"
 ```
 
 ### Phase 4: Retrospective (after daily target met or session end)
@@ -99,7 +101,7 @@ Replace `{variables}`, pass to Agent tool:
 Submit application to {COMPANY} — {ROLE}.
 
 **Job URL**: {JOB_URL}
-**ONLY use `mcp__playwright-{N}__*` tools. Never use other playwright instances.**
+**ONLY use `{PLAYWRIGHT_PREFIX}*` tools. Never use other playwright instances.**
 **Resume**: {RESUME_PATH}
 **Cover letter**: {COVER_LETTER_PATH} (if exists)
 **Application folder**: {APP_FOLDER}
