@@ -100,10 +100,10 @@ cp .claude/skills/auto-apply-v2/references/secrets.example.md \
 ### 3. Run
 
 ```bash
-claude
+claude --dangerously-skip-permissions
 ```
 
-The agent auto-starts on launch. For the full setup guide (Playwright config, daily cron, headless servers), see **[INSTALL.md](INSTALL.md)**.
+The `--dangerously-skip-permissions` flag enables full autonomy — no confirmation prompts. The agent auto-starts on launch. For the full setup guide (Playwright config, daily cron, headless servers), see **[INSTALL.md](INSTALL.md)**.
 
 ---
 
