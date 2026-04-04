@@ -55,11 +55,12 @@ Filter using **Job Selection Strategy** (below). Add selected jobs to TRACKER.md
 
 For each ⬜ job without materials:
 1. Create folder: `${CLAUDE_SKILL_DIR}/applications/YYYY-MM-DD_Company_Role/`
-2. Read `references/user-profile.md` + `references/template-guide.md`
-3. Tailor resume (`config.prepare.tailoring_checklist_steps`-step checklist, max `config.prepare.max_bullets_per_role` bullets per role)
-4. Generate cover letter (if `config.prepare.cover_letter_required`)
-5. Generate PDFs via bundled scripts
-6. Write `notes.md` + `STATUS.md` (⬜)
+2. Read `references/user-profile.md` for experience pool
+3. Select template per `references/template-guide.md`
+4. Tailor resume per `references/tailoring-guide.md`
+5. Generate cover letter per `references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
+6. Generate PDFs via bundled scripts
+7. Write `notes.md` + `STATUS.md` (⬜)
 
 Can parallelize with subagents (no browser needed).
 
