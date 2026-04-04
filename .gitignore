@@ -8,6 +8,7 @@
 Basic/applications/*
 !Basic/applications/.gitkeep
 !Basic/applications/TRACKER.example.md
+!Basic/applications/EXAMPLE_*/
 
 # Archive (old resume versions)
 Basic/archive/
