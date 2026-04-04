@@ -44,6 +44,12 @@ Generate based on answer N:
 ```
 If N=1, use key `"playwright"` instead of `"playwright-1"`.
 If user has existing `.mcp.json`, merge — don't overwrite.
+
+**IMPORTANT**: Claude Code may block writing `.mcp.json` directly (security policy). If write fails:
+1. Output the full JSON content to the user
+2. Tell them: "Please create `.mcp.json` in your project root with the content above"
+3. Or tell them to run: `cat > .mcp.json << 'EOF'\n{content}\nEOF`
+
 After creating, tell user: **"Please restart Claude Code for browser instances to load, then run /job-auto-apply again."**
 
 ### `user-profile.md`
