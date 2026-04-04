@@ -1,8 +1,10 @@
 # Claude Job Auto-Apply
 
-**AI agent that submits 30+ tailored job applications per day — fully autonomously.**
+**Fully autonomous job application agent powered by Claude Code subagent orchestration + Playwright.**
 
-> 30 applications. 7 ATS platforms. Zero human intervention. Every resume individually tailored. CAPTCHAs solved. Passwords reset mid-flow via Gmail.
+Searches jobs, tailors every resume to the JD, writes cover letters, fills any ATS form, auto-registers accounts, solves CAPTCHAs, handles email verification — and submits. All configurable. No limits.
+
+> Tested: 30 applications across 7 ATS platforms in one session. Zero human intervention.
 
 ## Install
 
