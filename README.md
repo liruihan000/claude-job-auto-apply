@@ -57,16 +57,26 @@ FRICTION: Siemens select2 dropdown not responding
 
 Indeed, Workday, Oracle HCM, Greenhouse, Lever, Ashby, Taleo, SAP SuccessFactors, Siemens, Uber, Jobvite + generic fallback. **Grows automatically** with every new platform encountered.
 
-## How It's Different
+## Why This Skill is Different
+
+No other open-source job application tool has all of these:
+
+- **Subagent parallelism** — Claude Code spawns N independent agents, each with its own browser. Not multitab — true parallel execution. No other agent framework can do this.
+- **10+ ATS platforms with battle-tested handlers** — Workday, Oracle HCM, Greenhouse, Lever, Ashby, Taleo, SAP, and more. Each handler written from real-world friction, not theory.
+- **Config-driven three-layer architecture** — Search, Prepare, Submit are fully decoupled. Change any layer via `config.json` without touching the skill logic.
+- **Self-healing** — Every ATS failure becomes a permanent handler. The system literally gets smarter with every application.
+- **Full automation** — Daily cron + Xvfb + persistent browser profiles. Runs on a headless server while you sleep.
+- **ATS-optimized resume tailoring** — 10-step checklist with keyword matching, action verb alignment, ATS compatibility scoring. Not just keyword stuffing — structural optimization.
 
 | | Traditional Bots | This Agent |
 |---|---|---|
-| Resume | One generic | Tailored per JD |
+| Resume | One generic | Tailored per JD (10-step ATS optimization) |
 | ATS | LinkedIn Easy Apply only | 10+ platforms, self-expanding |
 | Parallelism | Single-threaded | N browsers simultaneous |
 | Errors | Crash and stop | Self-heal, log, continue |
 | Learning | Static code | Accumulates ATS handlers |
 | Automation | Manual trigger | Daily cron, fully unattended |
+| Config | Hardcoded | Everything configurable |
 
 ## License
 
