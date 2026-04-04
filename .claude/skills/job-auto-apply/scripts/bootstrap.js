@@ -96,9 +96,27 @@ if (!fs.existsSync(trackerPath)) {
   created.push('TRACKER.md');
 }
 
+// --- Cron / automation detection ---
+const { execSync } = require('child_process');
+let cronConfigured = false;
+try {
+  const crontab = execSync('crontab -l 2>/dev/null', { encoding: 'utf8' });
+  cronConfigured = crontab.includes('job-auto-apply');
+} catch (e) {
+  // no crontab
+}
+
+// Xvfb available?
+let hasXvfb = false;
+try {
+  execSync('which xvfb-run', { encoding: 'utf8' });
+  hasXvfb = true;
+} catch (e) {}
+
+// Has display?
+const hasDisplay = !!process.env.DISPLAY;
+
 // --- Warnings (optional but recommended) ---
-// Check MCP connectors by looking for common tool patterns
-// (Can't actually test tools from Node, but flag for Claude to check)
 warnings.push('Check if Gmail MCP is connected (needed for email verification)');
 warnings.push('Check if Indeed MCP is connected (needed for job search)');
 
@@ -118,6 +136,11 @@ const result = {
     instances: playwrightInstances,
   },
   templates: templateCount,
+  cron: {
+    configured: cronConfigured,
+    has_xvfb: hasXvfb,
+    has_display: hasDisplay,
+  },
 };
 
 console.log(JSON.stringify(result, null, 2));

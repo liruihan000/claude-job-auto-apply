@@ -80,7 +80,37 @@ Auto-generate in project root:
 - Tracker: `Basic/applications/TRACKER.md`
 ```
 
-### MCP Connectors (warnings)
+### MCP Connectors
 Check tool availability and advise:
 - **Gmail MCP**: "Connect Gmail in Claude Code settings for auto email verification. Optional but recommended."
 - **Indeed MCP**: "Connect Indeed in Claude Code settings for job search. Without it, provide job URLs manually."
+
+### Daily Automation (optional, ask after all required setup is done)
+Ask: "Do you want applications to run automatically every day? (y/n)"
+
+If yes, ask: "What time? (e.g. 6:00 AM)"
+
+Then detect the environment and set up accordingly:
+
+**Linux/macOS server (headless):**
+1. Check if Xvfb is installed: `which xvfb-run`
+2. If not: tell user to install it (`sudo apt-get install -y xvfb`)
+3. Get the claude binary path: `which claude`
+4. Get the project directory: `pwd`
+5. Add cron job:
+```
+0 {HOUR} * * * xvfb-run {CLAUDE_PATH} --dangerously-skip-permissions -p '/job-auto-apply' >> {PROJECT_DIR}/logs/auto-apply.log 2>&1
+```
+
+**Linux/macOS desktop (has display):**
+```
+0 {HOUR} * * * export DISPLAY=:0 && cd {PROJECT_DIR} && {CLAUDE_PATH} --dangerously-skip-permissions -p '/job-auto-apply' >> logs/auto-apply.log 2>&1
+```
+
+**Verify setup:**
+- Run `crontab -l` to confirm
+- Create `logs/` directory if missing
+- Tell user: "Automation set up. Check logs at `logs/auto-apply.log`. To disable: `crontab -e` and remove the line."
+
+**Changing schedule later:**
+User can say "change auto-apply to 8 AM" or "disable daily auto-apply" at any time. Update crontab accordingly.
