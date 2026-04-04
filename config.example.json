@@ -25,6 +25,11 @@
     "prefer_google_signin": true
   },
 
+  "preferences": {
+    "language": "en",
+    "response_language": "match_user"
+  },
+
   "automation": {
     "skip_on_no_sponsorship": true,
     "skip_on_citizenship_required": true,

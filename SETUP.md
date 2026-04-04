@@ -73,10 +73,17 @@ Auto-generate in project root. Use the actual resolved path of `${CLAUDE_SKILL_D
 - Never stop mid-loop until daily target is met
 ```
 
-### MCP Connectors
-Check tool availability and advise:
-- **Gmail MCP**: "Connect Gmail in Claude Code settings for auto email verification. Optional but recommended."
-- **Indeed MCP**: "Connect Indeed in Claude Code settings for job search. Without it, provide job URLs manually."
+### MCP Connectors / Tools
+Check tool availability at runtime and advise user for each missing one:
+
+| Tool | Check | Purpose | Required? |
+|------|-------|---------|-----------|
+| Playwright MCP | `mcp__playwright*` tools exist | Browser automation for form filling | **Required** (configured via `.mcp.json` above) |
+| Gmail MCP | `mcp__claude_ai_Gmail__*` tools exist | Auto-read verification emails | Recommended |
+| Indeed MCP | `mcp__claude_ai_Indeed__*` tools exist | Job search via Indeed API | Recommended (without it, user provides URLs) |
+| Google Calendar MCP | `mcp__claude_ai_Google_Calendar__*` tools exist | Interview scheduling | Optional |
+
+For missing connectors, tell user: "Connect [Service] in Claude Code settings (Settings → Connectors → [Service])."
 
 ### Daily Automation (optional, ask after all required setup is done)
 Ask: "Do you want applications to run automatically every day? (y/n)"
