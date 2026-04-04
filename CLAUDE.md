@@ -15,11 +15,12 @@ Check if the project is configured. If ALL of these exist, **skip directly to St
 If ANY are missing, read **`INSTALL.md`** and follow its instructions to interactively guide the user through setup. After setup is complete, continue to Step 1.
 
 ### Step 1: Auto-Apply Check
-1. Read `Basic/applications/TRACKER.md` — this is the single source of truth
-2. Count today's ✅ SUBMITTED entries → `today_submitted`
-3. If `today_submitted >= 30` → report "今日目标已完成" and stop
-4. If `today_submitted < 30` → immediately invoke `/auto-apply-v2` to enter the auto-apply loop
-5. **Do NOT wait for user instructions** — start working automatically
+1. Run `node .claude/skills/auto-apply-v2/scripts/detect_config.js` → get `daily_target` and other config
+2. Read `Basic/applications/TRACKER.md` — this is the single source of truth
+3. Count today's ✅ SUBMITTED entries → `today_submitted`
+4. If `today_submitted >= daily_target` → report "今日目标已完成" and stop
+5. If `today_submitted < daily_target` → immediately invoke `/auto-apply-v2` to enter the auto-apply loop
+6. **Do NOT wait for user instructions** — start working automatically
 
 ## Parallel Execution with Playwright Instances
 Read `.mcp.json` to detect how many Playwright instances are available (1 to N).
@@ -30,7 +31,7 @@ Adapt parallelism dynamically — launch N subagents, each bound to its own inst
 2. Prepares up to N jobs (N = number of Playwright instances)
 3. Launches N subagents in parallel using the Agent tool (run_in_background: true)
 4. Waits for all N to complete → updates TRACKER.md
-5. Repeats until `today_submitted == 30`
+5. Repeats until `today_submitted == daily_target`
 
 Use the subagent prompt template in `.claude/skills/auto-apply-v2/SKILL.md` (Auto-Apply Loop section).
 
