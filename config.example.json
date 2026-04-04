@@ -1,14 +1,30 @@
 {
   "daily_target": 30,
-  "job_search": {
+
+  "search": {
     "keywords": ["Software Engineer", "AI Engineer", "Full Stack Developer"],
     "locations": ["Remote"],
     "job_type": "fulltime",
-    "max_age_days": 7
+    "max_age_days": 7,
+    "level_include": ["Entry", "Junior", "Associate", "Mid", "I", "II", "New Grad"],
+    "level_exclude": ["Senior", "Staff", "Principal", "Lead", "Director"],
+    "min_skills_overlap": 0.7
   },
-  "browser": {
-    "parallel_instances": 3
+
+  "prepare": {
+    "cover_letter_required": true,
+    "tailoring_checklist_steps": 8,
+    "max_bullets_per_role": 4
   },
+
+  "submit": {
+    "parallel_instances": 3,
+    "max_retries_per_form": 3,
+    "screenshot_review": true,
+    "screenshot_confirmation": true,
+    "prefer_google_signin": true
+  },
+
   "automation": {
     "skip_on_no_sponsorship": true,
     "skip_on_citizenship_required": true,
