@@ -49,7 +49,7 @@ Find jobs until `pending + today_submitted >= config.daily_target`. Sources (par
 1. **Indeed MCP**: `search_jobs` with `config.search.keywords` and `config.search.locations`
 2. **LinkedIn**: Use one playwright instance to browse `linkedin.com/jobs`
 
-Filter using **Job Selection Strategy** (below). Add selected jobs to TRACKER.md as ⬜.
+Filter per `references/selection-strategy.md`. Add selected jobs to TRACKER.md as ⬜.
 
 ### Phase 2: Prepare
 
@@ -125,45 +125,15 @@ For ATS-specific strategies, read the matching file in `ats-handlers/` if the pl
 
 ---
 
-## Job Selection Strategy
+## References
 
-Read all criteria from config:
-
-1. **Title**: `config.search.keywords`
-2. **Level**: Include `config.search.level_include`, exclude `config.search.level_exclude`
-3. **Sponsorship**: Skip if `config.automation.skip_on_no_sponsorship` and JD says "no sponsorship"/"US citizen only"
-4. **Skills**: `config.search.min_skills_overlap` overlap with user-profile.md
-5. **Location**: `config.search.locations`
-6. **Recency**: Prefer recent, skip older than `config.search.max_age_days`
-7. **ATS speed**: Indeed > LinkedIn Easy Apply > Greenhouse/Lever > Workday/Taleo
-
----
-
-## Account & Registration
-
-Read `references/secrets.md` for login credentials (email/username, password, preferred login method).
-- If ATS requires account registration, auto-register (if `config.automation.auto_register_accounts`)
-- Prefer Google Sign-In (if `config.submit.prefer_google_signin`)
-- Auto-agree all terms/privacy/cookies (if `config.automation.auto_agree_terms`)
-
----
-
-## Filing & Tracking
-
-Application folder structure:
-```
-${CLAUDE_SKILL_DIR}/applications/YYYY-MM-DD_Company_Role/
-├── resume.pdf + resume.docx
-├── cover_letter.pdf + cover_letter.docx
-├── notes.md (company, role, date, platform, tailoring decisions, job URL)
-├── STATUS.md (✅ SUBMITTED / ⬜ NOT SUBMITTED / ❌ SKIPPED / 🔵 INTERVIEWING)
-├── review-screenshot.png
-└── confirmation-screenshot.png
-```
-
-**TRACKER.md** format: `| Date | Company | Role | Platform | Status | Submitted | Notes |`
-- `Date` = materials prepared, `Submitted` = actual submission date
-- **Only main agent updates TRACKER** (never subagents)
+- **Job selection**: `references/selection-strategy.md` — filters, prioritization
+- **Resume tailoring**: `references/tailoring-guide.md` — 8-step checklist
+- **Cover letter**: `references/cover-letter-guide.md` — structure, rules
+- **Template selection**: `references/template-guide.md` — which template for which JD
+- **Filing & tracking**: `references/filing-guide.md` — folder structure, TRACKER format
+- **User profile**: `references/user-profile.md` — experience pool, contact info, EEO
+- **Credentials**: `references/secrets.md` — ATS login, registration, Google Sign-In
 
 ---
 
