@@ -1,0 +1,19 @@
+{
+  "daily_target": 30,
+  "job_search": {
+    "keywords": ["Software Engineer", "AI Engineer", "Full Stack Developer"],
+    "locations": ["Remote"],
+    "job_type": "fulltime",
+    "max_age_days": 7
+  },
+  "browser": {
+    "parallel_instances": 3
+  },
+  "automation": {
+    "skip_on_no_sponsorship": true,
+    "skip_on_citizenship_required": true,
+    "auto_agree_terms": true,
+    "auto_register_accounts": true,
+    "auto_sign_esignatures": true
+  }
+}
