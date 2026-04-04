@@ -74,80 +74,22 @@ Xvfb provides a virtual display for headless servers. Persistent browser profile
 
 ## Quick Start
 
-### 1. Prerequisites
-
-- [Claude Code CLI](https://claude.ai/code) installed and authenticated
-- Node.js 18+
-
-### 2. Clone & Configure
-
 ```bash
 git clone https://github.com/liruihan000/claude-job-auto-apply.git ~/Career
 cd ~/Career
 
-# Create your personal config files (from examples)
+# Copy example configs and fill with your info
 cp .claude/skills/auto-apply-v2/references/user-profile.example.md \
    .claude/skills/auto-apply-v2/references/user-profile.md
-
 cp .claude/skills/auto-apply-v2/references/secrets.example.md \
    .claude/skills/auto-apply-v2/references/secrets.md
 
-cp Basic/applications/TRACKER.example.md \
-   Basic/applications/TRACKER.md
-```
-
-Edit `user-profile.md` with your experience, skills, and contact info.
-Edit `secrets.md` with your ATS login credentials.
-
-### 3. Add Resume Templates
-
-Place your `.docx` resume files in `Basic/templates/`. Start with one general resume — the AI tailors it per application.
-
-### 4. Configure Playwright MCP
-
-Create `.mcp.json` in the project root:
-
-```json
-{
-  "mcpServers": {
-    "playwright-1": {
-      "command": "npx",
-      "args": ["@anthropic-ai/mcp-server-playwright", "--profile-dir", "~/.playwright/profile-1"]
-    },
-    "playwright-2": {
-      "command": "npx",
-      "args": ["@anthropic-ai/mcp-server-playwright", "--profile-dir", "~/.playwright/profile-2"]
-    },
-    "playwright-3": {
-      "command": "npx",
-      "args": ["@anthropic-ai/mcp-server-playwright", "--profile-dir", "~/.playwright/profile-3"]
-    }
-  }
-}
-```
-
-### 5. Run
-
-```bash
+# Add your resume (.docx) to Basic/templates/
+# Then run:
 claude
 ```
 
-The agent reads `CLAUDE.md`, checks today's progress, and starts applying automatically. Or invoke the skill directly:
-
-```
-/auto-apply-v2
-```
-
-### 6. (Optional) Daily Cron for Headless Servers
-
-```bash
-sudo apt-get install -y xvfb
-
-# Add to crontab (crontab -e):
-0 6 * * * xvfb-run /path/to/claude --dangerously-skip-permissions -p '/auto-apply-v2' >> ~/Career/logs/auto-apply.log 2>&1
-```
-
-See [INSTALL.md](INSTALL.md) for the full setup guide.
+The agent auto-starts on launch. For the full setup guide (Playwright config, daily cron, headless servers), see **[INSTALL.md](INSTALL.md)**.
 
 ---
 
