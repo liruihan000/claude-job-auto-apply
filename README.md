@@ -11,7 +11,12 @@ npx skills add liruihan000/claude-job-auto-apply
 claude --dangerously-skip-permissions
 ```
 
-The agent guides you through setup on first run.
+Then type:
+```
+/job-auto-apply
+```
+
+First run guides you through setup. After that, it auto-starts on every session.
 
 ## Architecture
 
