@@ -6,49 +6,13 @@ Automate job applications to reach **30 new submissions per day**. Every session
 ## On Every Session Start (AUTO-EXECUTE)
 
 ### Step 0: First-Run Setup Check
-Check if the project is configured. If ALL of these exist, **skip directly to Step 1** (do NOT read INSTALL.md):
+Check if the project is configured. If ALL of these exist, **skip directly to Step 1**:
 - `.mcp.json` exists
-- `references/user-profile.md` exists
-- `references/secrets.md` exists
+- `.claude/skills/auto-apply-v2/references/user-profile.md` exists
+- `.claude/skills/auto-apply-v2/references/secrets.md` exists
 - `Basic/templates/` has at least one .docx file
 
-If ANY are missing, read `INSTALL.md` for configuration templates, then run the interactive setup wizard:
-
-1. **`.mcp.json`** does not exist → need Playwright config
-2. **`references/user-profile.md`** does not exist → need user profile
-3. **`references/secrets.md`** does not exist → need credentials
-4. **`Basic/templates/`** is empty (no .docx files) → need resume templates
-
-#### Setup Wizard (only runs if setup incomplete):
-
-**Ask the user (in their language):**
-
-1. "How many parallel browser instances? (1 = basic, 3 = recommended for batch mode)"
-   - Generate `.mcp.json` based on their answer:
-     - If 1: single `playwright` entry
-     - If 2-3: `playwright-1`, `playwright-2`, `playwright-3` with persistent profiles
-   - Always use `--profile-dir ~/.playwright/profile-{N}` for persistent login
-
-2. "Do you have a user-profile.md ready, or should I help you create one?"
-   - If no: copy from `user-profile.example.md`, then ask them to fill in their details
-   - If yes: verify the file exists
-
-3. "Do you have ATS login credentials configured?"
-   - If no: copy from `secrets.example.md`, ask them to fill in email/password
-
-4. "Place your resume template (.docx) in Basic/templates/ — do you have one ready?"
-   - If no: explain they need at least one .docx resume to start
-
-5. Check for optional MCP connectors and advise:
-   - **Gmail MCP**: Check if `mcp__claude_ai_Gmail__*` tools are available. If not, tell user: "Some ATS platforms send verification emails during registration. To handle these automatically, connect Gmail in Claude Code settings (Settings → Connectors → Gmail). This is optional but recommended."
-   - **Indeed MCP**: Check if `mcp__claude_ai_Indeed__*` tools are available. If not, tell user: "To search for jobs via Indeed, connect Indeed in Claude Code settings (Settings → Connectors → Indeed). Without it, you'll need to provide job URLs manually."
-   - **Google Calendar MCP**: Optional. Mention: "If you want interview scheduling support, connect Google Calendar."
-
-6. Create any missing directories: `mkdir -p Basic/applications Basic/templates logs`
-
-6. If `Basic/applications/TRACKER.md` doesn't exist, create it with the header.
-
-After setup is complete, report "Setup complete!" and continue to Step 1.
+If ANY are missing, read **`INSTALL.md`** and follow its instructions to interactively guide the user through setup. After setup is complete, continue to Step 1.
 
 ### Step 1: Auto-Apply Check
 1. Read `Basic/applications/TRACKER.md` — this is the single source of truth
@@ -79,6 +43,7 @@ Use the subagent prompt template in `.claude/skills/auto-apply-v2/SKILL.md` (Aut
 - Prefer Google Sign-In when available (persistent login in browser profiles)
 
 ## Key References
+- Setup guide: `INSTALL.md`
 - User profile: `.claude/skills/auto-apply-v2/references/user-profile.md`
 - Application tracker: `Basic/applications/TRACKER.md`
 - Skill definition: `.claude/skills/auto-apply-v2/SKILL.md`
