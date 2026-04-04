@@ -5,7 +5,7 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`. Guide 
 ## For each missing item:
 
 ### `config.json`
-Create in `${CLAUDE_SKILL_DIR}/config.json`. Ask user to customize:
+Create in **project root** `./config.json`. Ask user to customize:
 ```json
 {
   "daily_target": 30,
@@ -47,15 +47,15 @@ If user has existing `.mcp.json`, merge — don't overwrite.
 After creating, tell user: **"Please restart Claude Code for browser instances to load, then run /job-auto-apply again."**
 
 ### `user-profile.md`
-Copy from `references/user-profile.example.md`.
+Copy from `${CLAUDE_SKILL_DIR}/references/user-profile.example.md` to **project root** `./user-profile.md`.
 Tell user: "Please fill in your experience, skills, education, and contact info in this file. This is the most important file — the AI uses it to tailor every resume."
 
 ### `secrets.md`
-Copy from `references/secrets.example.md`.
+Copy from `${CLAUDE_SKILL_DIR}/references/secrets.example.md` to **project root** `./secrets.md`.
 Tell user: "Fill in your email and default password for ATS portals. Prefer Google Sign-In if possible."
 
 ### Resume templates
-Tell user: "Place at least one .docx resume file in `${CLAUDE_SKILL_DIR}/templates/`. Start with one general resume — the AI will tailor it per application."
+Tell user: "Place at least one .docx resume file in `./templates/`. Start with one general resume — the AI will tailor it per application."
 
 ### `CLAUDE.md`
 Auto-generate in project root. Use the actual resolved path of `${CLAUDE_SKILL_DIR}`:

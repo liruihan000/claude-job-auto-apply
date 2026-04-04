@@ -2,27 +2,28 @@
 
 /**
  * Bootstrap check — detects what's configured and what's missing.
- * All paths are relative to the skill directory (self-contained).
  *
- * Usage: node scripts/bootstrap.js (or node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js)
+ * Paths:
+ *   - skillDir: where the skill is installed (SKILL.md, references/, scripts/)
+ *   - projectDir: user's working directory (config.json, templates/, applications/)
+ *
+ * Usage: node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// When installed via npx skills, ${CLAUDE_SKILL_DIR} points to the skill root.
-// When run from scripts/, the skill root is one level up.
 const skillDir = process.env.CLAUDE_SKILL_DIR || path.resolve(__dirname, '..');
-const root = skillDir;
+const projectDir = process.cwd();
 const ref = path.join(skillDir, 'references');
 
 const missing = [];
 const warnings = [];
 
-// --- Required files ---
+// --- User data (in project root) ---
 
-// config.json (in skill dir)
-const configPath = path.join(skillDir, 'config.json');
+// config.json
+const configPath = path.join(projectDir, 'config.json');
 let config = {};
 if (fs.existsSync(configPath)) {
   config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
@@ -30,8 +31,8 @@ if (fs.existsSync(configPath)) {
   missing.push('config.json');
 }
 
-// .mcp.json (in project root — needed for agent runtime)
-const mcpPath = path.join(root, '.mcp.json');
+// .mcp.json
+const mcpPath = path.join(projectDir, '.mcp.json');
 let playwrightInstances = [];
 if (fs.existsSync(mcpPath)) {
   const mcp = JSON.parse(fs.readFileSync(mcpPath, 'utf8'));
@@ -49,42 +50,42 @@ if (fs.existsSync(mcpPath)) {
   missing.push('.mcp.json');
 }
 
-// user-profile.md
-if (!fs.existsSync(path.join(ref, 'user-profile.md'))) {
+// user-profile.md (in project root)
+if (!fs.existsSync(path.join(projectDir, 'user-profile.md'))) {
   missing.push('user-profile.md');
 }
 
-// secrets.md
-if (!fs.existsSync(path.join(ref, 'secrets.md'))) {
+// secrets.md (in project root)
+if (!fs.existsSync(path.join(projectDir, 'secrets.md'))) {
   missing.push('secrets.md');
 }
 
-// templates (in skill dir)
-const templatesDir = path.join(skillDir, 'templates');
+// templates (in project root)
+const templatesDir = path.join(projectDir, 'templates');
 let templateCount = 0;
 if (fs.existsSync(templatesDir)) {
   templateCount = fs.readdirSync(templatesDir).filter(f => f.endsWith('.docx')).length;
 }
 if (templateCount === 0) {
-  missing.push('resume templates (no .docx in skill templates/)');
+  missing.push('resume templates (no .docx in templates/)');
 }
 
-// --- Directories (auto-create within skill dir) ---
+// --- Directories (auto-create in project root) ---
 const dirs = [
-  path.join(skillDir, 'applications'),
-  path.join(skillDir, 'templates'),
-  path.join(skillDir, 'logs'),
+  path.join(projectDir, 'applications'),
+  path.join(projectDir, 'templates'),
+  path.join(projectDir, 'logs'),
 ];
 const created = [];
 for (const d of dirs) {
   if (!fs.existsSync(d)) {
     fs.mkdirSync(d, { recursive: true });
-    created.push(path.relative(root, d));
+    created.push(path.relative(projectDir, d));
   }
 }
 
 // TRACKER.md
-const trackerPath = path.join(skillDir, 'applications', 'TRACKER.md');
+const trackerPath = path.join(projectDir, 'applications', 'TRACKER.md');
 if (!fs.existsSync(trackerPath)) {
   fs.writeFileSync(trackerPath, `# Job Application Tracker
 
@@ -96,9 +97,9 @@ if (!fs.existsSync(trackerPath)) {
   created.push('TRACKER.md');
 }
 
-// --- Agent instruction file (CLAUDE.md etc — in project root) ---
+// --- Agent instruction file (in project root) ---
 const agentFiles = ['CLAUDE.md', 'AGENTS.md', 'GEMINI.md'];
-const hasAgentFile = agentFiles.some(f => fs.existsSync(path.join(root, f)));
+const hasAgentFile = agentFiles.some(f => fs.existsSync(path.join(projectDir, f)));
 if (!hasAgentFile) {
   missing.push('agent instruction file (CLAUDE.md / AGENTS.md)');
 }
@@ -130,15 +131,16 @@ const result = {
   created,
   warnings,
   paths: {
-    skill: path.relative(root, skillDir),
-    templates: path.relative(root, path.join(skillDir, 'templates')),
-    applications: path.relative(root, path.join(skillDir, 'applications')),
-    tracker: path.relative(root, trackerPath),
-    logs: path.relative(root, path.join(skillDir, 'logs')),
+    skill: path.relative(projectDir, skillDir),
+    project: projectDir,
+    templates: 'templates',
+    applications: 'applications',
+    tracker: 'applications/TRACKER.md',
+    logs: 'logs',
   },
   config: {
     daily_target: config.daily_target || 30,
-    job_search: config.job_search || null,
+    job_search: config.job_search || config.search || null,
     automation: config.automation || null,
   },
   playwright: {

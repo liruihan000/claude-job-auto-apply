@@ -17,7 +17,7 @@ metadata:
 # Job Auto-Apply
 
 > **Configuration**: On startup, run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` to load all runtime parameters.
-> All values below prefixed with `config.*` come from `${CLAUDE_SKILL_DIR}/config.json`.
+> All values below prefixed with `config.*` come from `config.json`.
 > If `bootstrap.js` returns `ready: false`, read `${CLAUDE_SKILL_DIR}/SETUP.md` and guide user through setup.
 > Tools per Playwright instance: `browser_snapshot`, `browser_navigate`, `browser_click`, `browser_type`, `browser_fill_form`, `browser_select_option`, `browser_file_upload`, `browser_press_key`, `browser_evaluate`, `browser_take_screenshot`, `browser_wait_for`, `browser_tabs`, `browser_hover`
 
@@ -30,7 +30,7 @@ Every time this skill is invoked:
 0. Run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` → load config + check readiness
    - If `ready: false` → read `${CLAUDE_SKILL_DIR}/SETUP.md` and guide user through setup
    - Directories and TRACKER.md are auto-created by bootstrap.js
-1. Read `${CLAUDE_SKILL_DIR}/applications/TRACKER.md`
+1. Read `applications/TRACKER.md`
 2. Count `Submitted` column entries with today's date → `today_submitted`
 3. List ⬜ NOT SUBMITTED entries with materials ready
 4. Report: "Today: X/{config.daily_target} submitted, Y pending"
@@ -53,8 +53,8 @@ Filter per `references/selection-strategy.md`. Deduplicate. Add selected jobs to
 ### Phase 2: Prepare
 
 For each ⬜ job without materials:
-1. Create folder: `${CLAUDE_SKILL_DIR}/applications/YYYY-MM-DD_Company_Role/`
-2. Read `references/user-profile.md` for experience pool
+1. Create folder: `applications/YYYY-MM-DD_Company_Role/`
+2. Read `user-profile.md` for experience pool
 3. Select template per `references/template-guide.md`
 4. Tailor resume per `references/tailoring-guide.md`
 5. Generate cover letter per `references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
@@ -104,7 +104,7 @@ Prepare application materials for {COMPANY} — {ROLE}.
 4. Save all findings for use in resume tailoring and cover letter
 
 **Step 1 — Prepare materials:**
-Read `references/user-profile.md` for experience pool.
+Read `user-profile.md` for experience pool.
 Select template per `references/template-guide.md`.
 Tailor resume per `references/tailoring-guide.md` — use the full JD and company info.
 Generate cover letter per `references/cover-letter-guide.md` — reference specific company details.
@@ -138,11 +138,11 @@ Submit application to {COMPANY} — {ROLE}.
 **Cover letter**: {COVER_LETTER_PATH} (if exists)
 **Application folder**: {APP_FOLDER}
 
-Read `references/user-profile.md` for experience dates/titles/EEO defaults.
+Read `user-profile.md` for experience dates/titles/EEO defaults.
 For ATS-specific strategies, read the matching file in `ats-handlers/` if the platform is recognized (workday.md, greenhouse.md, lever.md, indeed.md, taleo.md, oracle.md, etc).
 
-**Contact info & form-fill data:** Read `references/user-profile.md`
-**Credentials & login:** Read `references/secrets.md`
+**Contact info & form-fill data:** Read `user-profile.md`
+**Credentials & login:** Read `secrets.md`
 
 **Rules:**
 1. Navigate → Apply → auto-agree all terms/cookies/eSignatures (if config.automation.auto_agree_terms)
@@ -170,8 +170,8 @@ For ATS-specific strategies, read the matching file in `ats-handlers/` if the pl
 - **Cover letter**: `references/cover-letter-guide.md` — structure, rules
 - **Template selection**: `references/template-guide.md` — which template for which JD
 - **Filing & tracking**: `references/filing-guide.md` — folder structure, TRACKER format
-- **User profile**: `references/user-profile.md` — experience pool, contact info, EEO
-- **Credentials**: `references/secrets.md` — ATS login, registration, Google Sign-In
+- **User profile**: `user-profile.md` — experience pool, contact info, EEO
+- **Credentials**: `secrets.md` — ATS login, registration, Google Sign-In
 
 ---
 
