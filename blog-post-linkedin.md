@@ -77,7 +77,7 @@ The final piece: **true unattended operation**.
 
 ```bash
 # Runs every day at 6 AM on a headless server
-0 6 * * * xvfb-run claude --dangerously-skip-permissions -p '/auto-apply-v2'
+0 6 * * * xvfb-run claude --dangerously-skip-permissions -p '/job-auto-apply'
 ```
 
 - `xvfb-run` provides a virtual display (no physical monitor needed)

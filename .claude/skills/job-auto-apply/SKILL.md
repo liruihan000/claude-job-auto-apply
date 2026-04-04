@@ -1,17 +1,22 @@
 ---
-name: auto-apply
+name: job-auto-apply
 description: >
-  Automated job application pipeline. Triggers on: "apply", "job application", "投简历",
-  "申请工作", "auto apply", "批量投", or job URLs. Handles search, resume tailoring,
-  form filling, and submission across all major ATS platforms.
+  Autonomous job application agent. Searches jobs, tailors resumes per JD, generates cover letters,
+  fills ATS forms, and submits applications across 10+ platforms — fully hands-free.
+  Triggers on: "apply", "job application", "投简历", "申请工作", "auto apply", "批量投", or job URLs.
+license: MIT
+compatibility: >
+  Requires Playwright MCP (browser automation) and Node.js 18+.
+  Optional: Gmail MCP (email verification), Indeed MCP (job search).
 metadata:
-  version: "3.0.0"
+  version: "3.1.0"
   author: "liruihan000"
+  repository: "https://github.com/liruihan000/claude-job-auto-apply"
 ---
 
-# Auto-Apply V3
+# Job Auto-Apply
 
-> **Configuration**: On startup, run `node .claude/skills/auto-apply-v2/scripts/detect_config.js` to load all runtime parameters:
+> **Configuration**: On startup, run `node .claude/skills/job-auto-apply/scripts/detect_config.js` to load all runtime parameters:
 > - `daily_target` — how many applications per day (default: 30)
 > - `playwright.count` — number of parallel browser instances (N)
 > - `playwright.instances[].prefix` — tool prefix for each instance (e.g. `mcp__playwright-1__`)
