@@ -100,6 +100,7 @@ cp .claude/skills/auto-apply-v2/references/secrets.example.md \
 ### 3. Run
 
 ```bash
+cd ~/Career
 claude --dangerously-skip-permissions
 ```
 
