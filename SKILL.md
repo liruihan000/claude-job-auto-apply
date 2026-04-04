@@ -61,7 +61,7 @@ For each ⬜ job without materials:
 6. Generate PDFs via bundled scripts
 7. Write `notes.md` + `STATUS.md` (⬜)
 
-Can parallelize with subagents (no browser needed).
+Can parallelize with subagents (no browser needed). Use the Prepare Subagent Prompt Template below.
 
 ### Phase 3: Submit
 
@@ -84,6 +84,38 @@ Check subagent return messages for `FRICTION:` lines:
 1. **New ATS + friction** → create `ats-handlers/{platform}.md` with the workaround
 2. **Known ATS + friction** → append fix as one bullet to existing handler
 3. **No friction lines** → skip, no update needed
+
+---
+
+## Prepare Subagent Prompt Template
+
+Replace `{variables}`, pass to Agent tool:
+
+```
+Prepare application materials for {COMPANY} — {ROLE}.
+
+**Job URL**: {JOB_URL}
+**Job Description**: {JOB_DESCRIPTION}
+**Application folder**: {APP_FOLDER}
+
+Read `references/user-profile.md` for experience pool.
+Select template per `references/template-guide.md`.
+Tailor resume per `references/tailoring-guide.md`.
+Generate cover letter per `references/cover-letter-guide.md`.
+
+**Rules:**
+1. Create folder {APP_FOLDER} if it doesn't exist
+2. Read the full JD — understand what the company needs
+3. Select the best matching resume template
+4. Follow every step of the tailoring checklist
+5. Write resume.md (tailored resume content)
+6. Write cover_letter.md (if config.prepare.cover_letter_required)
+7. Write notes.md with: company, role, URL, template used, keywords mirrored, tailoring decisions
+8. Write STATUS.md as ⬜ NOT SUBMITTED
+9. Do NOT submit anything — only prepare materials
+10. Do NOT fabricate experience — only use info from user-profile.md
+11. Return "PREPARED: {COMPANY} — {ROLE}" when done
+```
 
 ---
 
