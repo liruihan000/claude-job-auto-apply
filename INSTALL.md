@@ -61,11 +61,18 @@ Tool prefixes: `mcp__playwright-1__*`, `mcp__playwright-2__*`, `mcp__playwright-
 - After generating `.mcp.json`, tell the user to **restart Claude Code** for MCP servers to load
 - If user has existing MCP config, merge playwright entries into it (don't overwrite)
 
-## Gmail MCP (Optional)
+## MCP Connectors (via Claude Code Settings)
 
-For ATS email verification (Oracle HCM, Siemens, etc.), the user needs Gmail MCP connected. This is configured through Claude Code's built-in connector settings, not `.mcp.json`.
+These are configured through Claude Code's built-in connector settings (not `.mcp.json`). Detect availability by checking if their tools exist.
 
-Tell user: "If you want the agent to auto-verify emails during applications, connect Gmail MCP in Claude Code settings."
+| Connector | Tools prefix | Purpose | Required? |
+|-----------|-------------|---------|-----------|
+| Gmail | `mcp__claude_ai_Gmail__*` | Auto-read verification emails during ATS registration | Recommended |
+| Indeed | `mcp__claude_ai_Indeed__*` | Search jobs via Indeed API | Recommended (without it, user must provide URLs) |
+| Google Calendar | `mcp__claude_ai_Google_Calendar__*` | Interview scheduling | Optional |
+| Notion | `mcp__claude_ai_Notion__*` | Sync tracker to Notion | Optional |
+
+Tell user to connect via: Claude Code Settings → Connectors → [Service Name]
 
 ## Headless Server Setup (Optional)
 

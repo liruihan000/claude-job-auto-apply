@@ -6,7 +6,13 @@ Automate job applications to reach **30 new submissions per day**. Every session
 ## On Every Session Start (AUTO-EXECUTE)
 
 ### Step 0: First-Run Setup Check
-Check if the project is configured. If ANY of these are missing, run the interactive setup wizard BEFORE doing anything else:
+Check if the project is configured. If ALL of these exist, **skip directly to Step 1** (do NOT read INSTALL.md):
+- `.mcp.json` exists
+- `references/user-profile.md` exists
+- `references/secrets.md` exists
+- `Basic/templates/` has at least one .docx file
+
+If ANY are missing, read `INSTALL.md` for configuration templates, then run the interactive setup wizard:
 
 1. **`.mcp.json`** does not exist → need Playwright config
 2. **`references/user-profile.md`** does not exist → need user profile
@@ -33,7 +39,12 @@ Check if the project is configured. If ANY of these are missing, run the interac
 4. "Place your resume template (.docx) in Basic/templates/ — do you have one ready?"
    - If no: explain they need at least one .docx resume to start
 
-5. Create any missing directories: `mkdir -p Basic/applications Basic/templates logs`
+5. Check for optional MCP connectors and advise:
+   - **Gmail MCP**: Check if `mcp__claude_ai_Gmail__*` tools are available. If not, tell user: "Some ATS platforms send verification emails during registration. To handle these automatically, connect Gmail in Claude Code settings (Settings → Connectors → Gmail). This is optional but recommended."
+   - **Indeed MCP**: Check if `mcp__claude_ai_Indeed__*` tools are available. If not, tell user: "To search for jobs via Indeed, connect Indeed in Claude Code settings (Settings → Connectors → Indeed). Without it, you'll need to provide job URLs manually."
+   - **Google Calendar MCP**: Optional. Mention: "If you want interview scheduling support, connect Google Calendar."
+
+6. Create any missing directories: `mkdir -p Basic/applications Basic/templates logs`
 
 6. If `Basic/applications/TRACKER.md` doesn't exist, create it with the header.
 
