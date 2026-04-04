@@ -68,15 +68,6 @@ No other open-source job application tool has all of these:
 - **Full automation** — Daily cron + Xvfb + persistent browser profiles. Runs on a headless server while you sleep.
 - **ATS-optimized resume tailoring** — 10-step checklist with keyword matching, action verb alignment, ATS compatibility scoring. Not just keyword stuffing — structural optimization.
 
-| | Traditional Bots | This Agent |
-|---|---|---|
-| Resume | One generic | Tailored per JD (10-step ATS optimization) |
-| ATS | LinkedIn Easy Apply only | 10+ platforms, self-expanding |
-| Parallelism | Single-threaded | N browsers simultaneous |
-| Errors | Crash and stop | Self-heal, log, continue |
-| Learning | Static code | Accumulates ATS handlers |
-| Automation | Manual trigger | Daily cron, fully unattended |
-| Config | Hardcoded | Everything configurable |
 
 ## License
 
