@@ -74,6 +74,16 @@ Xvfb provides a virtual display for headless servers. Persistent browser profile
 
 ## Quick Start
 
+### 1. Install Claude Code
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+Or see [claude.ai/code](https://claude.ai/code) for other install methods (Desktop app, VS Code extension, etc.)
+
+### 2. Clone & Configure
+
 ```bash
 git clone https://github.com/liruihan000/claude-job-auto-apply.git ~/Career
 cd ~/Career
@@ -85,7 +95,11 @@ cp .claude/skills/auto-apply-v2/references/secrets.example.md \
    .claude/skills/auto-apply-v2/references/secrets.md
 
 # Add your resume (.docx) to Basic/templates/
-# Then run:
+```
+
+### 3. Run
+
+```bash
 claude
 ```
 
