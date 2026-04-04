@@ -58,26 +58,19 @@ Tell user: "Fill in your email and default password for ATS portals. Prefer Goog
 Tell user: "Place at least one .docx resume file in `${CLAUDE_SKILL_DIR}/templates/`. Start with one general resume — the AI will tailor it per application."
 
 ### `CLAUDE.md`
-Auto-generate in project root:
+Auto-generate in project root. Use the actual resolved path of `${CLAUDE_SKILL_DIR}`:
 ```markdown
 # Auto-Apply Project
 
 ## On Every Session Start (AUTO-EXECUTE)
-1. Run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` to check config
-2. If ready: read TRACKER.md, count today's submissions, invoke `/job-auto-apply` if below target
-3. If not ready: read `${CLAUDE_SKILL_DIR}/SETUP.md` and guide user through setup
-4. **Do NOT wait for user instructions** — start working automatically
+1. Invoke `/job-auto-apply` — it handles everything (config check, setup, pipeline)
+2. **Do NOT wait for user instructions** — start working automatically
 
 ## Autonomy
 - Full permission to submit applications, agree to terms, register accounts, sign eSignatures
+- All behavior controlled by config.json in the skill directory
 - If blocked, skip and move to next job
 - Never stop mid-loop until daily target is met
-
-## Key References
-- Config: `config.json`
-- Skill: `${CLAUDE_SKILL_DIR}/SKILL.md`
-- User profile: `${CLAUDE_SKILL_DIR}/references/user-profile.md`
-- Tracker: `${CLAUDE_SKILL_DIR}/applications/TRACKER.md`
 ```
 
 ### MCP Connectors
