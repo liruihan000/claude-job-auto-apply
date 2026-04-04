@@ -2,6 +2,7 @@
   "daily_target": 30,
 
   "search": {
+    "platforms": ["indeed", "linkedin", "glassdoor", "ziprecruiter", "google_jobs"],
     "keywords": ["Software Engineer", "AI Engineer", "Full Stack Developer"],
     "locations": ["Remote"],
     "job_type": "fulltime",

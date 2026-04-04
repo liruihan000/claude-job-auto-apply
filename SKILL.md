@@ -45,11 +45,10 @@ Every time this skill is invoked:
 
 ### Phase 1: Search
 
-Find jobs until `pending + today_submitted >= config.daily_target`. Sources (parallel):
-1. **Indeed MCP**: `search_jobs` with `config.search.keywords` and `config.search.locations`
-2. **LinkedIn**: Use one playwright instance to browse `linkedin.com/jobs`
+Find jobs until `pending + today_submitted >= config.daily_target`.
 
-Filter per `references/selection-strategy.md`. Add selected jobs to TRACKER.md as ⬜.
+Search `config.search.platforms` in parallel per `references/search-guide.md`.
+Filter per `references/selection-strategy.md`. Deduplicate. Add selected jobs to TRACKER.md as ⬜.
 
 ### Phase 2: Prepare
 
@@ -127,6 +126,7 @@ For ATS-specific strategies, read the matching file in `ats-handlers/` if the pl
 
 ## References
 
+- **Job search**: `references/search-guide.md` — platform methods, deduplication
 - **Job selection**: `references/selection-strategy.md` — filters, prioritization
 - **Resume tailoring**: `references/tailoring-guide.md` — 8-step checklist
 - **Cover letter**: `references/cover-letter-guide.md` — structure, rules
