@@ -3,7 +3,7 @@ name: job-auto-apply
 description: >
   Autonomous job application agent. Searches jobs, tailors resumes per JD, generates cover letters,
   fills ATS forms, and submits applications across 10+ platforms — fully hands-free.
-  Triggers on: "apply", "job application", "投简历", "申请工作", "auto apply", "批量投", or job URLs.
+  Triggers on: "apply", "job application", "auto apply", or job URLs.
 license: MIT
 compatibility: >
   Requires Playwright MCP (browser automation) and Node.js 18+.
@@ -33,7 +33,7 @@ Every time this skill is invoked:
 1. Read `${CLAUDE_SKILL_DIR}/applications/TRACKER.md`
 2. Count `Submitted` column entries with today's date → `today_submitted`
 3. List ⬜ NOT SUBMITTED entries with materials ready
-4. Report: "今日已提交 X/{config.daily_target}，待提交 Y 个"
+4. Report: "Today: X/{config.daily_target} submitted, Y pending"
 5. If `today_submitted >= config.daily_target` → report done and stop
 6. Otherwise → enter Auto-Apply Pipeline immediately
 
@@ -75,7 +75,7 @@ WHILE today_submitted < config.daily_target:
        FAILED → ❌ SKIPPED with reason
     5. If more pending → repeat. If none → back to Phase 1.
 END WHILE
-Report: "今日已完成 X/{config.daily_target}"
+Report: "Done: X/{config.daily_target} submitted"
 ```
 
 ### Phase 4: Retrospective (after daily target met or session end)
