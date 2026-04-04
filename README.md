@@ -9,16 +9,17 @@ Searches jobs, tailors every resume to the JD, writes cover letters, fills any A
 ## Install
 
 ```bash
+# 1. Install Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# 2. Install the skill
 npx skills add liruihan000/claude-job-auto-apply
+
+# 3. Run
 claude --dangerously-skip-permissions
 ```
 
-Then type:
-```
-/job-auto-apply
-```
-
-First run guides you through setup. After that, it auto-starts on every session.
+Then type `/job-auto-apply`. First run guides you through setup. After that, it auto-starts on every session.
 
 ## Architecture
 
