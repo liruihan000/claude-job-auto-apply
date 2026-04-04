@@ -12,7 +12,7 @@ Read `config.search.platforms` to determine which platforms to search. Search al
 
 ### LinkedIn
 - **Via Playwright**: Navigate to `linkedin.com/jobs/search/`, enter keywords and location
-- Login may be required (use credentials from `references/secrets.md`)
+- Login may be required (use credentials from `secrets.md`)
 - Filter by: Easy Apply, date posted, experience level
 - Pagination: scroll to load more
 - Note: LinkedIn has aggressive bot detection — use persistent profile, avoid rapid actions

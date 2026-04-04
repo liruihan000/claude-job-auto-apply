@@ -5,7 +5,7 @@
 Each application gets its own folder:
 
 ```
-${CLAUDE_SKILL_DIR}/applications/YYYY-MM-DD_Company_Role/
+applications/YYYY-MM-DD_Company_Role/
 ├── resume.pdf / .docx        # Tailored resume
 ├── cover_letter.pdf / .docx  # Tailored cover letter
 ├── notes.md                  # Company, role, URL, tailoring decisions

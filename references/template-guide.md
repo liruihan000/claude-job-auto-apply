@@ -2,7 +2,7 @@
 
 ## Location
 
-Templates are stored in `${CLAUDE_SKILL_DIR}/templates/`.
+Templates are stored in `templates/` (in your project root).
 
 ## How It Works
 
