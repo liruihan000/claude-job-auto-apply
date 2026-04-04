@@ -22,9 +22,8 @@ If ANY are missing, read **`INSTALL.md`** and follow its instructions to interac
 5. **Do NOT wait for user instructions** — start working automatically
 
 ## Parallel Execution with Playwright Instances
-Read `.mcp.json` to detect how many Playwright instances are available:
-- If 1 instance (`playwright`): submit jobs sequentially using `mcp__playwright__*`
-- If 3 instances (`playwright-1/2/3`): submit up to 3 jobs in parallel
+Read `.mcp.json` to detect how many Playwright instances are available (1 to N).
+Adapt parallelism dynamically — launch N subagents, each bound to its own instance.
 
 **Workflow:**
 1. Main agent searches Indeed for matching jobs + checks pending (⬜) applications

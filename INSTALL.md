@@ -16,24 +16,23 @@ Check these files to determine if setup is needed:
 
 ## Playwright MCP Configuration
 
-Generate `.mcp.json` based on user's chosen parallelism level.
+Ask user: "How many parallel browser instances do you want? (1-10, recommended: 3)"
 
-### Single Instance (basic)
+Generate `.mcp.json` dynamically based on their answer N:
+
+- If N = 1: use key `"playwright"` → tool prefix `mcp__playwright__*`
+- If N > 1: use keys `"playwright-1"` through `"playwright-N"` → tool prefixes `mcp__playwright-{i}__*`
+
+### Template (for each instance i from 1 to N):
 
 ```json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest", "--profile-dir", "~/.playwright/profile-1"]
-    }
-  }
+"playwright-{i}": {
+  "command": "npx",
+  "args": ["@playwright/mcp@latest", "--profile-dir", "~/.playwright/profile-{i}"]
 }
 ```
 
-Tool prefix: `mcp__playwright__*`
-
-### 3 Parallel Instances (recommended for batch mode)
+### Example: N = 3 (default recommended)
 
 ```json
 {
@@ -54,12 +53,15 @@ Tool prefix: `mcp__playwright__*`
 }
 ```
 
-Tool prefixes: `mcp__playwright-1__*`, `mcp__playwright-2__*`, `mcp__playwright-3__*`
+### Changing the count later
+
+User can ask "change Playwright to 5 instances" at any time. Regenerate `.mcp.json` with the new count and tell user to restart Claude Code.
 
 ### Notes
 - `--profile-dir` enables persistent login sessions (cookies, Google SSO survive across runs)
-- After generating `.mcp.json`, tell the user to **restart Claude Code** for MCP servers to load
+- After generating/updating `.mcp.json`, tell the user to **restart Claude Code** for MCP servers to load
 - If user has existing MCP config, merge playwright entries into it (don't overwrite)
+- More instances = more parallel submissions, but also more memory usage
 
 ## MCP Connectors (via Claude Code Settings)
 
