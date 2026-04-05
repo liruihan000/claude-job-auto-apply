@@ -133,8 +133,8 @@ try {
 const hasDisplay = !!process.env.DISPLAY;
 
 // --- Warnings ---
-warnings.push('Check if Gmail MCP is connected (needed for email verification)');
-warnings.push('Check if Indeed MCP is connected (needed for job search)');
+warnings.push('Gmail MCP is optional (for email verification). If not connected, skip email steps.');
+warnings.push('Indeed MCP is optional (for faster job search). If not connected, use Playwright to search Indeed.');
 
 // --- Output ---
 const result = {

@@ -87,34 +87,39 @@ Write answers into `secrets.md`.
 }
 ```
 
-## Step 3: Playwright (auto-detect + auto-install)
+## Step 3: Playwright (validate + fix)
 
-**Do this silently — no question needed unless action required from user.**
+**Compare config against actual `.mcp.json`, fix any mismatch.**
 
-1. Check if Playwright tools already exist (`mcp__playwright*`):
-   - If yes → skip, report "Playwright already available"
+1. Read `config.json` → `config.submit.parallel_instances` (default 3) → call it `N`
+2. Read `.mcp.json` in project root (if exists) → count entries matching `playwright*` → call it `actual`
+3. Compare:
 
-2. If not, auto-install single instance:
-   ```bash
-   claude plugin install playwright
-   ```
-   - If succeeds → done, tell user "Installed. Restart Claude Code to activate."
+| Situation | Action |
+|-----------|--------|
+| No `.mcp.json` at all | Generate it with N instances |
+| `actual < N` | Add missing instances to `.mcp.json` |
+| `actual >= N` | Skip — Playwright is ready |
+| `actual > N` | Fine, keep extra instances |
 
-3. If user wants parallel (check `config.submit.parallel_instances`):
-   - If > 1, generate `.mcp.json`:
+4. When generating/updating `.mcp.json`, use this format per instance:
    ```json
    {
      "mcpServers": {
-       "playwright-{i}": {
+       "playwright-1": {
          "command": "npx",
-         "args": ["@playwright/mcp@latest", "--user-data-dir", "~/.playwright/profile-{i}"]
+         "args": ["@playwright/mcp@latest", "--user-data-dir", "~/.playwright/profile-1"]
+       },
+       "playwright-2": {
+         "command": "npx",
+         "args": ["@playwright/mcp@latest", "--user-data-dir", "~/.playwright/profile-2"]
        }
      }
    }
    ```
-   - Try Bash write: `cat > .mcp.json << 'EOF' ... EOF`
-   - If blocked → output JSON, tell user to create manually
-   - Tell user: "Restart Claude Code to load browsers. First run may need manual login to Google/job sites — after that it's automatic."
+   - Preserve any existing non-playwright entries in `.mcp.json`
+
+5. Tell user: "Playwright configured. First run may need manual login to Google/job sites — after that it's automatic."
 
 ## Step 4: Auto-generate (no questions)
 
@@ -162,3 +167,9 @@ Route answers to:
 - Resume rules → `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
 - ATS workarounds → `${CLAUDE_SKILL_DIR}/ats-handlers/`
 - Do NOT modify `SKILL.md`
+
+## Final Verification (after all steps complete)
+
+Re-run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` and check:
+- `ready: true` → Setup complete. Tell user: "Setup done. Restart Claude Code to activate Playwright, then run `/job-auto-apply`."
+- `ready: false` → Show the `missing` list. Fix what can be auto-fixed, ask user for the rest. **Do NOT proceed to the auto-apply pipeline until `ready: true`.**
