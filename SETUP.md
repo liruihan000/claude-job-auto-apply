@@ -59,7 +59,7 @@ If N>1: Generate `.mcp.json` with N instances:
   "mcpServers": {
     "playwright-{i}": {
       "command": "npx",
-      "args": ["@playwright/mcp@latest", "--profile-dir", "~/.playwright/profile-{i}"]
+      "args": ["@playwright/mcp@latest", "--user-data-dir", "~/.playwright/profile-{i}"]
     }
   }
 }
