@@ -28,16 +28,23 @@ Write all answers into `user-profile.md`.
 
 ## Step 2: Job Preferences + Credentials (one combined question)
 
-Ask in one message:
-- "A few quick questions:
-  1. What job titles? (e.g. Software Engineer, AI Engineer)
-  2. What locations? (e.g. Remote, New York)
-  3. How many per day? (default: 30)
-  4. Email for job portal accounts?
-  5. Password for auto-registration?
-  6. Prefer Google Sign-In? (yes/no)"
+Ask:
+- "What job titles? (e.g. Software Engineer, AI Engineer)"
+- "What locations? (e.g. Remote, New York)"
+- "How many per day? (default: 30)"
 
-Write answers into `config.json` and `secrets.md`.
+Write answers into `config.json`.
+
+### `secrets.md` (ask separately — explain why)
+
+Tell user: "Some job sites require creating an account to apply. I'll store credentials locally in `secrets.md` (never uploaded, never shared) so the agent can auto-register and log in for you."
+
+Then ask:
+- "Email for job portal accounts?"
+- "Password for auto-registration?"
+- "Prefer Google Sign-In when available? (yes/no)"
+
+Write answers into `secrets.md`.
 
 ### config.json template:
 ```json
