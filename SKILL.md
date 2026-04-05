@@ -6,7 +6,9 @@ description: >
   Triggers on: "apply", "job application", "auto apply", or job URLs.
 license: MIT
 compatibility: >
-  Requires Playwright MCP (browser automation) and Node.js 18+.
+  Best with Claude Code (subagent parallelism + Playwright MCP).
+  Other agents: works in sequential mode (no parallel submission).
+  Requires: Playwright MCP (browser automation), Node.js 18+.
   Optional: Gmail MCP (email verification), Indeed MCP (job search).
 metadata:
   version: "4.0.0"
