@@ -31,23 +31,33 @@ if (fs.existsSync(configPath)) {
   missing.push('config.json');
 }
 
-// .mcp.json
-const mcpPath = path.join(projectDir, '.mcp.json');
+// Playwright detection — check project .mcp.json + global plugin
 let playwrightInstances = [];
+
+// Check project-level .mcp.json
+const mcpPath = path.join(projectDir, '.mcp.json');
 if (fs.existsSync(mcpPath)) {
   const mcp = JSON.parse(fs.readFileSync(mcpPath, 'utf8'));
   const servers = mcp.mcpServers || mcp;
   playwrightInstances = Object.keys(servers)
     .filter(k => k.startsWith('playwright'))
-    .map(k => ({
-      name: k,
-      prefix: `mcp__${k}__`,
-    }));
-  if (playwrightInstances.length === 0) {
-    missing.push('.mcp.json (no playwright entries)');
+    .map(k => ({ name: k, prefix: `mcp__${k}__`, source: 'project' }));
+}
+
+// Check global plugin
+const homeDir = require('os').homedir();
+const globalPluginPaths = [
+  path.join(homeDir, '.claude', 'plugins', 'marketplaces', 'claude-plugins-official', 'external_plugins', 'playwright', '.mcp.json'),
+  path.join(homeDir, '.claude', 'plugins', 'playwright', '.mcp.json'),
+];
+for (const gp of globalPluginPaths) {
+  if (fs.existsSync(gp) && playwrightInstances.length === 0) {
+    playwrightInstances.push({ name: 'playwright', prefix: 'mcp__playwright__', source: 'global-plugin' });
   }
-} else {
-  missing.push('.mcp.json');
+}
+
+if (playwrightInstances.length === 0) {
+  missing.push('playwright (no project .mcp.json or global plugin)');
 }
 
 // user-profile.md (in project root)

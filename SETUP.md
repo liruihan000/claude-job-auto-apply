@@ -38,11 +38,20 @@ Ask: "What job titles are you targeting?" → update keywords.
 Ask: "What locations?" → update locations.
 Ask: "How many applications per day?" → update daily_target.
 
-### `.mcp.json`
+### Playwright Browser Setup
 Ask: "How many parallel browsers do you want? (1-10, recommended: 3)
 
 This controls how many job applications are submitted at the same time. Each browser is an independent window that fills and submits one application. 3 browsers = 3 applications submitted simultaneously. More = faster, but uses more memory."
-Generate based on answer N:
+
+**First, check if Playwright is already available** (user may have global plugin):
+- Check if `mcp__playwright__*` or `mcp__playwright-1__*` tools exist
+- If yes: skip Playwright setup, report what's already available
+
+**If not available, install based on N:**
+
+If N=1: Run `Bash: claude plugin install playwright` to auto-install. No `.mcp.json` needed.
+
+If N>1: Generate `.mcp.json` with N instances:
 ```json
 {
   "mcpServers": {
@@ -53,28 +62,8 @@ Generate based on answer N:
   }
 }
 ```
-**Writing `.mcp.json`:** Try Bash first, fall back to manual if blocked.
-
-Step 1: Attempt to write via Bash tool:
-```bash
-cat > .mcp.json << 'EOF'
-{generated JSON}
-EOF
-```
-
-Step 2: If Bash write succeeds, verify with `cat .mcp.json` and continue.
-
-Step 3: If Bash write is blocked, THEN fall back — output the JSON and tell user:
-"Create `.mcp.json` in your project root. Run this in your terminal:"
-```bash
-cat > .mcp.json << 'EOF'
-{generated JSON}
-EOF
-```
-
-Alternative for N=1: `/plugin install playwright` (no `.mcp.json` needed).
-
-If user has existing `.mcp.json`, show how to merge playwright entries.
+Try writing via Bash: `cat > .mcp.json << 'EOF' ... EOF`
+If blocked, output the JSON and tell user to create it manually.
 
 After creating, tell user:
 1. **"Restart Claude Code for browser instances to load."**
