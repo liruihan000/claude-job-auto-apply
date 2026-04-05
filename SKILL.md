@@ -179,6 +179,7 @@ For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-
 
 ## Key Rules
 
+- **ONLY use Playwright MCP (`mcp__playwright*`) for browser automation.** Never use BrowserMCP, Claude-in-Chrome, or other browser tools. Playwright MCP has persistent profiles and supports parallel instances.
 - **Tailor every resume.** Never submit a template as-is.
 - **Never fabricate experience** — only info from user-profile.md.
 - **Pre-submit validation** — JS check all required fields before clicking submit.
