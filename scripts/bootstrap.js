@@ -64,10 +64,12 @@ if (!fs.existsSync(path.join(projectDir, 'secrets.md'))) {
 const templatesDir = path.join(projectDir, 'templates');
 let templateCount = 0;
 if (fs.existsSync(templatesDir)) {
-  templateCount = fs.readdirSync(templatesDir).filter(f => f.endsWith('.docx')).length;
+  templateCount = fs.readdirSync(templatesDir).filter(f =>
+    f.endsWith('.docx') || f.endsWith('.pdf') || f.endsWith('.doc')
+  ).length;
 }
 if (templateCount === 0) {
-  missing.push('resume templates (no .docx in templates/)');
+  missing.push('resume templates (no .docx/.pdf/.doc in templates/)');
 }
 
 // --- Directories (auto-create in project root) ---
