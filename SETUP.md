@@ -4,27 +4,71 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 
 ## Setup Rules
 
-- **One step at a time.** Ask one question, wait for answer, then next question. Never dump all questions at once.
-- **Simple direct questions.** Just ask and let user type. Never give numbered option menus. No "1. I'll type it / 2. Skip" — just ask the question directly. Example: "Your password for job portals?" and user types the answer.
+- **One step at a time.** Ask one question, wait for answer, then next question.
+- **Simple direct questions.** Just ask and let user type. No numbered option menus.
 - **Match user's language.** If they write in Chinese, respond in Chinese.
-- **Write files immediately** after getting each answer. Don't wait until the end.
+- **Write files immediately** after getting each answer.
 - **Confirm each step** before moving on: "Done. Next: ..."
-- Follow the order below — each step may depend on the previous one.
+- **Auto-do everything possible.** Only ask when user input is truly needed.
 
-## Steps (in order):
+## Step 1: Resume + Profile (most important)
 
-### `config.json`
-Create in **project root** `./config.json`. Ask user to customize:
+Ask: "Drop your resume (.docx or .pdf) into the `templates/` folder, then tell me when it's there."
+
+Once available, read the resume and auto-extract everything into `user-profile.md`:
+- Name, contact, location, links, work experience, education, skills, projects
+
+Then ask only what's missing (combine into one message):
+- "I extracted your info from the resume. A few things I couldn't find — please fill in:
+  - Phone number?
+  - Work authorization? (e.g. US Citizen, H-1B, Green Card)
+  - Gender / Race / Veteran / Disability for EEO forms? (or 'prefer not to say' for all)"
+
+Write all answers into `user-profile.md`.
+
+## Step 2: Job Preferences + Credentials (one combined question)
+
+Ask in one message:
+- "A few quick questions:
+  1. What job titles? (e.g. Software Engineer, AI Engineer)
+  2. What locations? (e.g. Remote, New York)
+  3. How many per day? (default: 30)
+  4. Email for job portal accounts?
+  5. Password for auto-registration?
+  6. Prefer Google Sign-In? (yes/no)"
+
+Write answers into `config.json` and `secrets.md`.
+
+### config.json template:
 ```json
 {
-  "daily_target": 30,
-  "job_search": {
-    "keywords": ["Software Engineer", "AI Engineer"],
-    "locations": ["Remote"],
+  "daily_target": {answer_3},
+  "search": {
+    "platforms": ["indeed", "linkedin", "glassdoor", "ziprecruiter", "google_jobs"],
+    "keywords": {answer_1},
+    "locations": {answer_2},
     "job_type": "fulltime",
-    "max_age_days": 7
+    "max_age_days": 7,
+    "level_include": ["Entry", "Junior", "Associate", "Mid", "I", "II", "New Grad"],
+    "level_exclude": ["Senior", "Staff", "Principal", "Lead", "Director"],
+    "min_skills_overlap": 0.7
   },
-  "browser": { "parallel_instances": 3 },
+  "prepare": {
+    "cover_letter_required": true,
+    "tailoring_checklist_steps": 10,
+    "max_bullets_per_role": 4,
+    "additional_documents": []
+  },
+  "submit": {
+    "parallel_instances": 3,
+    "max_retries_per_form": 3,
+    "screenshot_review": true,
+    "screenshot_confirmation": true,
+    "prefer_google_signin": {answer_6}
+  },
+  "preferences": {
+    "response_language": "match_user"
+  },
   "automation": {
     "skip_on_no_sponsorship": true,
     "skip_on_citizenship_required": true,
@@ -34,81 +78,40 @@ Create in **project root** `./config.json`. Ask user to customize:
   }
 }
 ```
-Ask: "What job titles are you targeting?" → update keywords.
-Ask: "What locations?" → update locations.
-Ask: "How many applications per day?" → update daily_target.
 
-### Playwright Browser Setup
-Ask: "How many parallel browsers? (recommended: 3)
+## Step 3: Playwright (auto-detect + auto-install)
 
-This controls how many job applications are submitted at the same time. Each browser is an independent window that fills and submits one application. 3 browsers = 3 applications submitted simultaneously.
+**Do this silently — no question needed unless action required from user.**
 
-Each browser uses ~300-500MB RAM. Recommended: 3 for most machines (8GB+ RAM), up to 5 for 16GB+, up to 10 for 32GB+."
+1. Check if Playwright tools already exist (`mcp__playwright*`):
+   - If yes → skip, report "Playwright already available"
 
-**First, check if Playwright is already available** (user may have global plugin):
-- Check if `mcp__playwright__*` or `mcp__playwright-1__*` tools exist
-- If yes: skip Playwright setup, report what's already available
+2. If not, auto-install single instance:
+   ```bash
+   claude plugin install playwright
+   ```
+   - If succeeds → done, tell user "Installed. Restart Claude Code to activate."
 
-**If not available, install based on N:**
+3. If user wants parallel (check `config.submit.parallel_instances`):
+   - If > 1, generate `.mcp.json`:
+   ```json
+   {
+     "mcpServers": {
+       "playwright-{i}": {
+         "command": "npx",
+         "args": ["@playwright/mcp@latest", "--user-data-dir", "~/.playwright/profile-{i}"]
+       }
+     }
+   }
+   ```
+   - Try Bash write: `cat > .mcp.json << 'EOF' ... EOF`
+   - If blocked → output JSON, tell user to create manually
+   - Tell user: "Restart Claude Code to load browsers. First run may need manual login to Google/job sites — after that it's automatic."
 
-If N=1: Run `Bash: claude plugin install playwright` to auto-install. No `.mcp.json` needed.
+## Step 4: Auto-generate (no questions)
 
-If N>1: Generate `.mcp.json` with N instances:
-```json
-{
-  "mcpServers": {
-    "playwright-{i}": {
-      "command": "npx",
-      "args": ["@playwright/mcp@latest", "--user-data-dir", "~/.playwright/profile-{i}"]
-    }
-  }
-}
-```
-Try writing via Bash: `cat > .mcp.json << 'EOF' ... EOF`
-If blocked, output the JSON and tell user to create it manually.
-
-After creating, tell user:
-1. **"Restart Claude Code for browser instances to load."**
-2. **"On the first run, the browser may ask you to log into Google or job portals manually. This only happens once — after that, login sessions are saved in persistent browser profiles and reused automatically."**
-
-### Resume templates (ask BEFORE user-profile)
-Tell user: "Place at least one resume file (.docx or .pdf) in `./templates/`."
-
-If user has added a template, read it immediately — extract all available info:
-- Name, contact, location, links
-- Work experience (companies, titles, dates, bullets)
-- Education (schools, degrees, dates)
-- Skills
-- Projects
-
-### `user-profile.md`
-Copy from `${CLAUDE_SKILL_DIR}/references/user-profile.example.md` to **project root** `./user-profile.md`.
-
-**Auto-fill from resume:** If a resume template was provided above, automatically populate user-profile.md with all extracted info. Fill in every field that can be derived from the resume.
-
-**Then ask user to fill gaps:** After auto-fill, check what's still missing and ask:
-- Contact info not in resume? (phone, email, LinkedIn, GitHub)
-- Work authorization / visa status?
-- EEO defaults — ask each separately:
-  - "Gender? (Male / Female / Non-binary / Prefer not to say)"
-  - "Race/Ethnicity? (Asian / White / Black / Hispanic / Prefer not to say)"
-  - "Veteran status? (Not a veteran / Protected veteran)"
-  - "Disability? (No / Yes / Prefer not to say)"
-- Additional bullet variants per role? ("Want to add more bullet options for [Role]?")
-- Any roles or projects not on the resume?
-
-Write answers directly into user-profile.md — user should not need to edit the file manually.
-
-### `secrets.md`
-Copy from `${CLAUDE_SKILL_DIR}/references/secrets.example.md` to **project root** `./secrets.md`.
-Ask user directly:
-- "Some job sites (Workday, Oracle, Greenhouse) require creating an account before applying. What email should the agent use to register? (Can be the same as your resume email)"
-- "Default password for these auto-registrations?"
-- "Prefer Google Sign-In when available? (Faster, avoids creating separate accounts)"
-Write answers into secrets.md.
-
-### `CLAUDE.md`
-Auto-generate in project root. Use the actual resolved path of `${CLAUDE_SKILL_DIR}`:
+Silently create:
+- **`CLAUDE.md`** in project root:
 ```markdown
 # Auto-Apply Project
 
@@ -118,65 +121,36 @@ Auto-generate in project root. Use the actual resolved path of `${CLAUDE_SKILL_D
 
 ## Autonomy
 - Full permission to submit applications, agree to terms, register accounts, sign eSignatures
-- All behavior controlled by config.json in the skill directory
+- All behavior controlled by config.json
 - If blocked, skip and move to next job
 - Never stop mid-loop until daily target is met
 ```
 
-### MCP Connectors / Tools
-Check tool availability at runtime and advise user for each missing one:
+- Check MCP connectors silently, only report missing ones:
+  - Gmail MCP (`mcp__claude_ai_Gmail__*`) — "Connect Gmail in Settings → Connectors for email verification (recommended)"
+  - Indeed MCP (`mcp__claude_ai_Indeed__*`) — "Connect Indeed in Settings → Connectors for job search (recommended)"
 
-| Tool | Check | Purpose | Required? |
-|------|-------|---------|-----------|
-| Playwright MCP | `mcp__playwright*` tools exist | Browser automation for form filling | **Required** (configured via `.mcp.json` above) |
-| Gmail MCP | `mcp__claude_ai_Gmail__*` tools exist | Auto-read verification emails | Recommended |
-| Indeed MCP | `mcp__claude_ai_Indeed__*` tools exist | Job search via Indeed API | Recommended (without it, user provides URLs) |
-| Google Calendar MCP | `mcp__claude_ai_Google_Calendar__*` tools exist | Interview scheduling | Optional |
+## Step 5: Daily Cron (optional)
 
-For missing connectors, tell user: "Connect [Service] in Claude Code settings (Settings → Connectors → [Service])."
+Ask: "Want auto-apply to run daily? If yes, what time? (e.g. 6 AM) Your computer must be on at that time."
 
-### Daily Automation (optional, ask after all required setup is done)
-Ask: "Do you want applications to run automatically every day? (y/n)"
-
-If yes, ask: "What time? (e.g. 6:00 AM)
-
-Note: your computer must be powered on at the scheduled time. If it's asleep or shut down, the job will be skipped. Servers that run 24/7 are ideal."
-
-Then detect the environment and set up accordingly:
-
-**Linux/macOS server (headless):**
-1. Check if Xvfb is installed: `which xvfb-run`
-2. If not: tell user to install it (`sudo apt-get install -y xvfb`)
-3. Get the claude binary path: `which claude`
-4. Get the project directory: `pwd`
-5. Add cron job:
+If yes, detect environment and set up:
+- Check `which xvfb-run` for headless support
+- Get claude path: `which claude`
+- Get project dir: `pwd`
+- Add cron:
 ```
 0 {HOUR} * * * cd {PROJECT_DIR} && xvfb-run {CLAUDE_PATH} --dangerously-skip-permissions -p '/job-auto-apply' >> {PROJECT_DIR}/logs/auto-apply.log 2>&1
 ```
+- If no Xvfb and no DISPLAY: tell user to install (`sudo apt-get install -y xvfb`)
 
-**Linux/macOS desktop (has display):**
-```
-0 {HOUR} * * * export DISPLAY=:0 && cd {PROJECT_DIR} && {CLAUDE_PATH} --dangerously-skip-permissions -p '/job-auto-apply' >> logs/auto-apply.log 2>&1
-```
+## Step 6: Final
 
-**Verify setup:**
-- Run `crontab -l` to confirm
-- Create `logs/` directory if missing
-- Tell user: "Automation set up. Check logs at `logs/auto-apply.log`. To disable: `crontab -e` and remove the line."
+Ask: "Anything else to customize? (companies to target/avoid, extra job boards, resume preferences, additional documents to upload)"
 
-**Changing schedule later:**
-User can say "change auto-apply to 8 AM" or "disable daily auto-apply" at any time. Update crontab accordingly.
-
-### Final Check (always ask at the end of setup)
-Ask: "Anything else you'd like to customize? For example:
-- Specific companies to target or avoid
-- Additional job boards to search
-- Resume rules or preferences
-- Application preferences"
-
-If user has requests, update the appropriate files:
+Route answers to:
 - Job preferences → `config.json`
 - Search platforms → `${CLAUDE_SKILL_DIR}/references/search-guide.md`
 - Resume rules → `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
 - ATS workarounds → `${CLAUDE_SKILL_DIR}/ats-handlers/`
-- Do NOT modify `SKILL.md` — it is the core pipeline logic and should not be auto-edited.
+- Do NOT modify `SKILL.md`
