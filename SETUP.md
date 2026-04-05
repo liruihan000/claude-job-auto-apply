@@ -41,7 +41,9 @@ Ask: "How many applications per day?" → update daily_target.
 ### Playwright Browser Setup
 Ask: "How many parallel browsers do you want? (1-10, recommended: 3)
 
-This controls how many job applications are submitted at the same time. Each browser is an independent window that fills and submits one application. 3 browsers = 3 applications submitted simultaneously. More = faster, but uses more memory."
+This controls how many job applications are submitted at the same time. Each browser is an independent window that fills and submits one application. 3 browsers = 3 applications submitted simultaneously.
+
+Each browser uses ~300-500MB RAM. Recommended: 3 for most machines (8GB+ RAM), up to 5 for 16GB+, up to 10 for 32GB+."
 
 **First, check if Playwright is already available** (user may have global plugin):
 - Check if `mcp__playwright__*` or `mcp__playwright-1__*` tools exist
