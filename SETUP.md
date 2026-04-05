@@ -96,7 +96,11 @@ Copy from `${CLAUDE_SKILL_DIR}/references/user-profile.example.md` to **project 
 **Then ask user to fill gaps:** After auto-fill, check what's still missing and ask:
 - Contact info not in resume? (phone, email, LinkedIn, GitHub)
 - Work authorization / visa status?
-- EEO defaults? (gender, race, veteran, disability)
+- EEO defaults — ask each separately:
+  - "Gender? (Male / Female / Non-binary / Prefer not to say)"
+  - "Race/Ethnicity? (Asian / White / Black / Hispanic / Prefer not to say)"
+  - "Veteran status? (Not a veteran / Protected veteran)"
+  - "Disability? (No / Yes / Prefer not to say)"
 - Additional bullet variants per role? ("Want to add more bullet options for [Role]?")
 - Any roles or projects not on the resume?
 
