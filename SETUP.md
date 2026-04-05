@@ -151,7 +151,7 @@ Then detect the environment and set up accordingly:
 4. Get the project directory: `pwd`
 5. Add cron job:
 ```
-0 {HOUR} * * * xvfb-run {CLAUDE_PATH} --dangerously-skip-permissions -p '/job-auto-apply' >> {PROJECT_DIR}/logs/auto-apply.log 2>&1
+0 {HOUR} * * * cd {PROJECT_DIR} && xvfb-run {CLAUDE_PATH} --dangerously-skip-permissions -p '/job-auto-apply' >> {PROJECT_DIR}/logs/auto-apply.log 2>&1
 ```
 
 **Linux/macOS desktop (has display):**
