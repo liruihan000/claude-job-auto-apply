@@ -5,8 +5,7 @@ Read `config.search.platforms` to determine which platforms to search. Search al
 ## Platform Methods
 
 ### Indeed
-- **Via MCP** (preferred): Use `mcp__claude_ai_Indeed__search_jobs` with config keywords/locations
-- **Via Playwright** (fallback): Navigate to `indeed.com/jobs`, enter keywords and location, scrape results
+- **Via Playwright**: Navigate to `indeed.com/jobs`, enter keywords and location, scrape results
 - Supports: keywords, location, job_type, date posted filter
 - Pagination: scroll or click "Next" to load more results
 
@@ -61,4 +60,3 @@ Jobs often appear on multiple platforms. Deduplicate by:
 
 - Don't search too aggressively — add small delays between requests
 - If a platform blocks or shows CAPTCHA, skip it and move to next
-- Indeed MCP has built-in rate limiting, no extra handling needed

@@ -9,7 +9,7 @@ compatibility: >
   Full parallel mode: Claude Code, Cursor 2.4+, Codex CLI, Gemini CLI (subagent + Playwright MCP).
   Sequential mode: any agent with Playwright MCP support.
   Requires: Playwright MCP (browser automation), Node.js 18+.
-  Optional: Gmail MCP (email verification), Indeed MCP (job search).
+  Optional: Gmail MCP (email verification).
 metadata:
   version: "4.0.0"
   author: "liruihan000"
@@ -50,7 +50,7 @@ Every time this skill is invoked:
 Find jobs until `pending + today_submitted >= config.daily_target`.
 
 Search `config.search.platforms` in parallel per `${CLAUDE_SKILL_DIR}/references/search-guide.md`.
-Searches may use Playwright MCP, dedicated MCP connectors (e.g. Indeed MCP), or WebSearch/WebFetch for job discovery.
+Searches may use Playwright MCP, WebSearch, or WebFetch for job discovery.
 Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate. Add selected jobs to TRACKER.md as ⬜.
 
 ### Phase 2: Prepare
@@ -181,7 +181,10 @@ For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-
 
 ## Key Rules
 
-- **ONLY use Playwright MCP (`mcp__playwright*`) for browser automation.** Never use BrowserMCP, Claude-in-Chrome, or other browser tools. If Playwright is unavailable, **STOP and run SETUP** — do not attempt alternative browser tools. (WebSearch/WebFetch may be used for job discovery, but all form-filling and submission must go through Playwright.)
+- **Browser tool rules:**
+  - **Job searching**: WebSearch, WebFetch, and Playwright are all OK.
+  - **Everything that interacts with a web page** (form-filling, clicking, uploading, submitting, logging in, registering): **Playwright MCP (`mcp__playwright*`) ONLY.** Never use BrowserMCP, Claude-in-Chrome, or other browser tools.
+  - If Playwright is unavailable, **STOP and run SETUP** — do not attempt alternative browser tools.
 - **Tailor every resume.** Never submit a template as-is.
 - **Never fabricate experience** — only info from user-profile.md.
 - **Pre-submit validation** — JS check all required fields before clicking submit.

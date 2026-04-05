@@ -139,9 +139,9 @@ Silently create:
 - Never stop mid-loop until daily target is met
 ```
 
-- Check MCP connectors silently, only report missing ones:
-  - Gmail MCP (`mcp__claude_ai_Gmail__*`) — "Connect Gmail in Settings → Connectors for email verification (recommended)"
-  - Indeed MCP (`mcp__claude_ai_Indeed__*`) — "Connect Indeed in Settings → Connectors for job search (recommended)"
+- Check if Gmail MCP is connected (`mcp__claude_ai_Gmail__*` tools available):
+  - **If not connected** → Tell user: "Gmail MCP is not connected. It's optional — used for email verification codes during account registration on job sites. If you want to enable it, go to Settings → Connectors → Gmail. You can skip this and handle verification codes manually when needed."
+  - If connected → skip silently
 
 ## Step 5: Daily Cron (optional)
 
