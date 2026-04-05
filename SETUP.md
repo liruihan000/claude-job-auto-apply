@@ -1,8 +1,16 @@
 # Setup Guide (for Claude Code)
 
-This file is read by SKILL.md when `bootstrap.js` returns `ready: false`. Guide the user through each missing item interactively.
+This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 
-## For each missing item:
+## Setup Rules
+
+- **One step at a time.** Ask one question, wait for answer, then next question. Never dump all questions at once.
+- **Match user's language.** If they write in Chinese, respond in Chinese.
+- **Write files immediately** after getting each answer. Don't wait until the end.
+- **Confirm each step** before moving on: "Done. Next: ..."
+- Follow the order below — each step may depend on the previous one.
+
+## Steps (in order):
 
 ### `config.json`
 Create in **project root** `./config.json`. Ask user to customize:
