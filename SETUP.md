@@ -33,6 +33,8 @@ Ask:
 - "What job titles? (e.g. Software Engineer, AI Engineer)"
 - "What locations? (e.g. Remote, New York)"
 - "How many per day? (default: 30)"
+- "Do you want to review and approve jobs/materials before each phase proceeds, or run fully automatically? (review / auto)"
+  - **This question is mandatory** — do not skip, do not assume a default. If user doesn't answer, ask again.
 
 Write answers into `config.json`.
 
@@ -78,6 +80,7 @@ Write answers into `secrets.md`.
     "response_language": "match_user"
   },
   "automation": {
+    "manual_review": "{answer_review}",
     "skip_on_no_sponsorship": true,
     "skip_on_citizenship_required": true,
     "auto_agree_terms": true,
@@ -87,7 +90,16 @@ Write answers into `secrets.md`.
 }
 ```
 
-## Step 3: Playwright (validate + fix)
+## Step 3: LibreOffice (auto-install)
+
+**Needed for DOCX→PDF conversion. Do silently if possible.**
+
+1. Check `which libreoffice`:
+   - If found → skip
+   - If not → run `sudo apt-get install -y libreoffice-writer-nogui`
+   - If sudo fails → tell user: "Please install LibreOffice for PDF conversion: `sudo apt-get install -y libreoffice-writer-nogui`"
+
+## Step 4: Playwright (validate + fix)
 
 **Compare config against actual `.mcp.json`, fix any mismatch.**
 
@@ -121,7 +133,7 @@ Write answers into `secrets.md`.
 
 5. Tell user: "Playwright configured. First run may need manual login to Google/job sites — after that it's automatic."
 
-## Step 4: Auto-generate (no questions)
+## Step 5: Auto-generate (no questions)
 
 Silently create:
 - **`CLAUDE.md`** in project root:
@@ -143,7 +155,7 @@ Silently create:
   - **If not connected** → Tell user: "Gmail MCP is not connected. It's optional — used for email verification codes during account registration on job sites. If you want to enable it, go to Settings → Connectors → Gmail. You can skip this and handle verification codes manually when needed."
   - If connected → skip silently
 
-## Step 5: Daily Cron (optional)
+## Step 6: Daily Cron (optional)
 
 Ask: "Want auto-apply to run daily? If yes, what time? (e.g. 6 AM) Your computer must be on at that time."
 
@@ -157,7 +169,7 @@ If yes, detect environment and set up:
 ```
 - If no Xvfb and no DISPLAY: tell user to install (`sudo apt-get install -y xvfb`)
 
-## Step 6: Final
+## Step 7: Final
 
 Ask: "Anything else to customize? (companies to target/avoid, extra job boards, resume preferences, additional documents to upload)"
 

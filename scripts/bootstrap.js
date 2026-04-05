@@ -31,6 +31,11 @@ if (fs.existsSync(configPath)) {
   missing.push('config.json');
 }
 
+// Check required config fields
+if (config && config.automation && config.automation.manual_review === undefined) {
+  missing.push('config.automation.manual_review (must be set to true or false)');
+}
+
 // Playwright detection — check project .mcp.json + global plugin
 let playwrightInstances = [];
 
@@ -129,6 +134,14 @@ try {
   execSync('which xvfb-run', { encoding: 'utf8' });
   hasXvfb = true;
 } catch (e) {}
+
+let hasLibreoffice = false;
+try {
+  execSync('which libreoffice', { encoding: 'utf8' });
+  hasLibreoffice = true;
+} catch (e) {
+  missing.push('libreoffice (needed for DOCX→PDF conversion, install: sudo apt-get install -y libreoffice-writer-nogui)');
+}
 
 const hasDisplay = !!process.env.DISPLAY;
 

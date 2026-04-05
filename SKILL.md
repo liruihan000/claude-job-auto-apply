@@ -39,7 +39,7 @@ Every time this skill is invoked:
 5. If `today_submitted >= config.daily_target` → report done and stop
 6. Otherwise → enter Auto-Apply Pipeline immediately
 
-**AUTONOMY: MAXIMUM** — full permission for everything, never ask user, never stop mid-loop.
+**AUTONOMY:** If `config.automation.manual_review: false` → full autonomy, never ask user, never stop mid-loop. If `true` → pause between phases for user review before proceeding.
 
 ---
 
@@ -53,6 +53,9 @@ Search `config.search.platforms` in parallel per `${CLAUDE_SKILL_DIR}/references
 Searches may use Playwright MCP, WebSearch, or WebFetch for job discovery.
 Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate. Add selected jobs to TRACKER.md as ⬜.
 
+**Review checkpoint (if `config.automation.manual_review: true`):**
+Show the user the list of jobs found (company, role, platform, URL). Wait for user to confirm which jobs to proceed with. Remove any rejected jobs from TRACKER.md.
+
 ### Phase 2: Prepare
 
 For each ⬜ job without materials:
@@ -61,10 +64,13 @@ For each ⬜ job without materials:
 3. Select template per `${CLAUDE_SKILL_DIR}/references/template-guide.md`
 4. Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
 5. Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
-6. Generate PDFs via bundled scripts
+6. Generate DOCX via bundled scripts, then convert to PDF: `libreoffice --headless --convert-to pdf --outdir <folder> <file.docx>`
 7. Write `notes.md` + `STATUS.md` (⬜)
 
 Can parallelize with subagents (no browser needed). Use the Prepare Subagent Prompt Template below.
+
+**Review checkpoint (if `config.automation.manual_review: true`):**
+Show the user a summary of each prepared application (company, role, resume highlights, cover letter summary). Let user review the generated files. Wait for user to confirm which applications to submit. Mark any rejected ones as ❌ SKIPPED in TRACKER.md.
 
 ### Phase 3: Submit
 
