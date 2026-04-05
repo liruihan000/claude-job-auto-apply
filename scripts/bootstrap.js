@@ -3,6 +3,9 @@
 /**
  * Bootstrap check — detects what's configured and what's missing.
  *
+ * Output: structured JSON grouped by setup step.
+ * Each step has: { status: "ok"|"missing"|"incomplete", details: [...] }
+ *
  * Paths:
  *   - skillDir: where the skill is installed (SKILL.md, references/, scripts/)
  *   - projectDir: user's working directory (config.json, templates/, applications/)
@@ -12,31 +15,136 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const skillDir = process.env.CLAUDE_SKILL_DIR || path.resolve(__dirname, '..');
 const projectDir = process.cwd();
 const ref = path.join(skillDir, 'references');
+const homeDir = require('os').homedir();
 
-const missing = [];
-const warnings = [];
+// ============================================================
+// Step 1: Resume + Profile
+// ============================================================
+const step1 = { step: 1, name: 'Resume + Profile', status: 'ok', details: [] };
 
-// --- User data (in project root) ---
+// templates
+const templatesDir = path.join(projectDir, 'templates');
+let templateCount = 0;
+if (fs.existsSync(templatesDir)) {
+  templateCount = fs.readdirSync(templatesDir).filter(f =>
+    f.endsWith('.docx') || f.endsWith('.pdf') || f.endsWith('.doc')
+  ).length;
+}
+if (templateCount === 0) {
+  step1.status = 'missing';
+  step1.details.push('No resume templates in templates/ (.docx/.pdf/.doc)');
+}
 
-// config.json
+// user-profile.md — validate against example template
+const profilePath = path.join(projectDir, 'user-profile.md');
+const profileExamplePath = path.join(ref, 'user-profile.example.md');
+const missingProfileFields = [];
+
+if (!fs.existsSync(profilePath)) {
+  step1.status = 'missing';
+  step1.details.push('user-profile.md not found');
+} else if (fs.existsSync(profileExamplePath)) {
+  const profile = fs.readFileSync(profilePath, 'utf8');
+  const example = fs.readFileSync(profileExamplePath, 'utf8');
+
+  // Extract ## sections from example
+  const sectionMatches = example.match(/^## .+/gm) || [];
+  for (const section of sectionMatches) {
+    const sectionName = section.replace(/^## /, '').trim();
+    const pattern = new RegExp(`^## .*${sectionName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '.*')}`, 'im');
+    if (!pattern.test(profile)) {
+      missingProfileFields.push(`section: ${sectionName}`);
+    }
+  }
+
+  // Extract **Field**: entries from Core Identity section of example
+  const coreSection = example.match(/## Core Identity[\s\S]*?(?=\n## |$)/);
+  if (coreSection) {
+    const fieldMatches = coreSection[0].match(/\*\*(\w[\w\s/]*)\*\*/g) || [];
+    for (const field of fieldMatches) {
+      const fieldName = field.replace(/\*\*/g, '').trim();
+      const pattern = new RegExp(`\\*\\*${fieldName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\*\\*:\\s*\\S+`);
+      if (!pattern.test(profile)) {
+        missingProfileFields.push(fieldName);
+      }
+    }
+  }
+
+  if (missingProfileFields.length > 0) {
+    step1.status = 'incomplete';
+    step1.details.push(...missingProfileFields.map(f => `user-profile.md missing: ${f}`));
+  }
+}
+
+// ============================================================
+// Step 2: Config + Secrets
+// ============================================================
+const step2 = { step: 2, name: 'Config + Credentials', status: 'ok', details: [] };
+
 const configPath = path.join(projectDir, 'config.json');
 let config = {};
-if (fs.existsSync(configPath)) {
-  config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+const missingConfigFields = [];
+
+if (!fs.existsSync(configPath)) {
+  step2.status = 'missing';
+  step2.details.push('config.json not found');
 } else {
-  missing.push('config.json');
+  config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+
+  // Validate against config.example.json
+  const configExamplePath = path.join(skillDir, 'config.example.json');
+  if (fs.existsSync(configExamplePath)) {
+    const configExample = JSON.parse(fs.readFileSync(configExamplePath, 'utf8'));
+
+    function checkKeys(obj, example, keyPath) {
+      for (const [key, value] of Object.entries(example)) {
+        const fullPath = keyPath ? `${keyPath}.${key}` : key;
+        if (obj === undefined || obj === null || obj[key] === undefined || obj[key] === null) {
+          missingConfigFields.push(fullPath);
+        } else if (typeof value === 'object' && !Array.isArray(value) && value !== null) {
+          checkKeys(obj[key], value, fullPath);
+        }
+      }
+    }
+
+    checkKeys(config, configExample, '');
+    if (missingConfigFields.length > 0) {
+      step2.status = 'incomplete';
+      step2.details.push(...missingConfigFields.map(f => `config.json missing: ${f}`));
+    }
+  }
 }
 
-// Check required config fields
-if (config && config.automation && config.automation.manual_review === undefined) {
-  missing.push('config.automation.manual_review (must be set to true or false)');
+// secrets.md
+if (!fs.existsSync(path.join(projectDir, 'secrets.md'))) {
+  if (step2.status === 'ok') step2.status = 'incomplete';
+  step2.details.push('secrets.md not found (optional — will ask user)');
 }
 
-// Playwright detection — check project .mcp.json + global plugin
+// ============================================================
+// Step 3: LibreOffice
+// ============================================================
+const step3 = { step: 3, name: 'LibreOffice', status: 'ok', details: [] };
+
+let hasLibreoffice = false;
+try {
+  execSync('which libreoffice', { encoding: 'utf8' });
+  hasLibreoffice = true;
+} catch (e) {
+  step3.status = 'missing';
+  step3.details.push('libreoffice not installed (install: sudo apt-get install -y libreoffice-writer-nogui)');
+}
+
+// ============================================================
+// Step 4: Playwright
+// ============================================================
+const step4 = { step: 4, name: 'Playwright', status: 'ok', details: [] };
+
 let playwrightInstances = [];
 
 // Check project-level .mcp.json
@@ -50,7 +158,6 @@ if (fs.existsSync(mcpPath)) {
 }
 
 // Check global plugin
-const homeDir = require('os').homedir();
 const globalPluginPaths = [
   path.join(homeDir, '.claude', 'plugins', 'marketplaces', 'claude-plugins-official', 'external_plugins', 'playwright', '.mcp.json'),
   path.join(homeDir, '.claude', 'plugins', 'playwright', '.mcp.json'),
@@ -62,67 +169,33 @@ for (const gp of globalPluginPaths) {
 }
 
 if (playwrightInstances.length === 0) {
-  missing.push('playwright (no project .mcp.json or global plugin)');
-}
-
-// user-profile.md (in project root)
-if (!fs.existsSync(path.join(projectDir, 'user-profile.md'))) {
-  missing.push('user-profile.md');
-}
-
-// secrets.md (in project root)
-if (!fs.existsSync(path.join(projectDir, 'secrets.md'))) {
-  missing.push('secrets.md');
-}
-
-// templates (in project root)
-const templatesDir = path.join(projectDir, 'templates');
-let templateCount = 0;
-if (fs.existsSync(templatesDir)) {
-  templateCount = fs.readdirSync(templatesDir).filter(f =>
-    f.endsWith('.docx') || f.endsWith('.pdf') || f.endsWith('.doc')
-  ).length;
-}
-if (templateCount === 0) {
-  missing.push('resume templates (no .docx/.pdf/.doc in templates/)');
-}
-
-// --- Directories (auto-create in project root) ---
-const dirs = [
-  path.join(projectDir, 'applications'),
-  path.join(projectDir, 'templates'),
-  path.join(projectDir, 'logs'),
-];
-const created = [];
-for (const d of dirs) {
-  if (!fs.existsSync(d)) {
-    fs.mkdirSync(d, { recursive: true });
-    created.push(path.relative(projectDir, d));
+  step4.status = 'missing';
+  step4.details.push('No Playwright MCP found (no project .mcp.json or global plugin)');
+} else {
+  const needed = (config.submit && config.submit.parallel_instances) || 1;
+  if (playwrightInstances.length < needed) {
+    step4.status = 'incomplete';
+    step4.details.push(`Need ${needed} Playwright instances, found ${playwrightInstances.length}`);
   }
 }
 
-// TRACKER.md
-const trackerPath = path.join(projectDir, 'applications', 'TRACKER.md');
-if (!fs.existsSync(trackerPath)) {
-  fs.writeFileSync(trackerPath, `# Job Application Tracker
+// ============================================================
+// Step 5: Agent instruction file
+// ============================================================
+const step5 = { step: 5, name: 'Agent file + MCP connectors', status: 'ok', details: [] };
 
-| Date | Company | Role | Platform | Status | Submitted | Notes |
-|------|---------|------|----------|--------|-----------|-------|
-
-**Today: 0/0 submitted**
-`);
-  created.push('TRACKER.md');
-}
-
-// --- Agent instruction file (in project root) ---
 const agentFiles = ['CLAUDE.md', 'AGENTS.md', 'GEMINI.md'];
 const hasAgentFile = agentFiles.some(f => fs.existsSync(path.join(projectDir, f)));
 if (!hasAgentFile) {
-  missing.push('agent instruction file (CLAUDE.md / AGENTS.md)');
+  step5.status = 'missing';
+  step5.details.push('No agent instruction file (CLAUDE.md / AGENTS.md)');
 }
 
-// --- Cron / automation detection ---
-const { execSync } = require('child_process');
+// ============================================================
+// Step 6: Cron (optional — not blocking)
+// ============================================================
+const step6 = { step: 6, name: 'Daily Cron (optional)', status: 'ok', details: [] };
+
 let cronConfigured = false;
 try {
   const crontab = execSync('crontab -l 2>/dev/null', { encoding: 'utf8' });
@@ -135,25 +208,55 @@ try {
   hasXvfb = true;
 } catch (e) {}
 
-let hasLibreoffice = false;
-try {
-  execSync('which libreoffice', { encoding: 'utf8' });
-  hasLibreoffice = true;
-} catch (e) {
-  missing.push('libreoffice (needed for DOCX→PDF conversion, install: sudo apt-get install -y libreoffice-writer-nogui)');
-}
-
 const hasDisplay = !!process.env.DISPLAY;
 
-// --- Warnings ---
-warnings.push('Gmail MCP is optional (for email verification). If not connected, skip email steps.');
+if (!cronConfigured) {
+  step6.details.push('Cron not configured (optional)');
+}
 
-// --- Output ---
+// ============================================================
+// Auto-create directories + TRACKER
+// ============================================================
+const created = [];
+const dirs = [
+  path.join(projectDir, 'applications'),
+  path.join(projectDir, 'templates'),
+  path.join(projectDir, 'logs'),
+];
+for (const d of dirs) {
+  if (!fs.existsSync(d)) {
+    fs.mkdirSync(d, { recursive: true });
+    created.push(path.relative(projectDir, d));
+  }
+}
+
+const trackerPath = path.join(projectDir, 'applications', 'TRACKER.md');
+if (!fs.existsSync(trackerPath)) {
+  fs.writeFileSync(trackerPath, `# Job Application Tracker
+
+| Date | Company | Role | Platform | Status | Submitted | Notes |
+|------|---------|------|----------|--------|-----------|-------|
+
+**Today: 0/0 submitted**
+`);
+  created.push('TRACKER.md');
+}
+
+// ============================================================
+// Output
+// ============================================================
+const steps = [step1, step2, step3, step4, step5, step6];
+const blocking = steps.filter(s => s.status === 'missing' || s.status === 'incomplete');
+// Step 6 (cron) is never blocking
+const ready = blocking.filter(s => s.step !== 6).length === 0;
+
 const result = {
-  ready: missing.length === 0,
-  missing,
+  ready,
+  steps,
   created,
-  warnings,
+  warnings: [
+    'Gmail MCP is optional (for email verification). If not connected, skip email steps.',
+  ],
   paths: {
     skill: path.relative(projectDir, skillDir),
     project: projectDir,

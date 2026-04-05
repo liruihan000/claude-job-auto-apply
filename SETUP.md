@@ -10,22 +10,17 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 - **Write files immediately** after getting each answer.
 - **Confirm each step** before moving on: "Done. Next: ..."
 - **Auto-do everything possible.** Only ask when user input is truly needed.
-- **Skip what's already done.** `bootstrap.js` returns a `missing` list — only run steps for items in that list. If a file already exists and is valid, skip its step entirely without mentioning it.
+- **Skip what's already done.** `bootstrap.js` returns a `steps` array. Each step has `status: "ok"|"missing"|"incomplete"` and `details`. Only run steps where status is NOT `"ok"`. If `"incomplete"`, fix only the items listed in `details`.
+- **Patch incomplete config.** If step 2 shows missing config fields, read the existing `config.json`, ask user only for fields that require user input, fill remaining missing fields with template defaults, and write back the updated config.
 
 ## Step 1: Resume + Profile (most important)
 
 Ask: "Drop your resume (.docx or .pdf) into the `templates/` folder, then tell me when it's there."
 
-Once available, read the resume and auto-extract everything into `user-profile.md`:
-- Name, contact, location, links, work experience, education, skills, projects
+Once available, read the resume and auto-extract everything into `user-profile.md`.
+**Follow the exact format in `${CLAUDE_SKILL_DIR}/references/user-profile.example.md`** — same sections, same field names, same structure.
 
-Then ask only what's missing (combine into one message):
-- "I extracted your info from the resume. A few things I couldn't find — please fill in:
-  - Phone number?
-  - Work authorization? (e.g. US Citizen, H-1B, Green Card)
-  - Gender / Race / Veteran / Disability for EEO forms? (or 'prefer not to say' for all)"
-
-Write all answers into `user-profile.md`.
+Then ask the user for any fields that couldn't be extracted from the resume (combine into one message). Write all answers into `user-profile.md`.
 
 ## Step 2: Job Preferences + Credentials (one combined question)
 
@@ -36,59 +31,14 @@ Ask:
 - "Do you want to review and approve jobs/materials before each phase proceeds, or run fully automatically? (review / auto)"
   - **This question is mandatory** — do not skip, do not assume a default. If user doesn't answer, ask again.
 
-Write answers into `config.json`.
+Read `${CLAUDE_SKILL_DIR}/config.example.json` as the template. Fill in user's answers for fields that need user input (keywords, locations, daily_target, manual_review, prefer_google_signin), keep all other fields at their template defaults. Write into `config.json`.
 
-### `secrets.md` (ask separately — explain why)
+### `secrets.md` (optional, ask separately — explain why)
 
-Tell user: "Some job sites require creating an account to apply. I'll store credentials locally in `secrets.md` (never uploaded, never shared) so the agent can auto-register and log in for you."
+Tell user: "Some job sites require creating an account to apply. I'll store credentials locally in `secrets.md` (never uploaded, never shared) so the agent can auto-register and log in for you. You can skip this and handle logins manually. Set up now? (yes/no)"
 
-Then ask:
-- "Email for job portal accounts?"
-- "Password for auto-registration?"
-- "Prefer Google Sign-In when available? (yes/no)"
-
-Write answers into `secrets.md`.
-
-### config.json template:
-```json
-{
-  "daily_target": {answer_3},
-  "search": {
-    "platforms": ["indeed", "linkedin", "glassdoor", "ziprecruiter", "google_jobs"],
-    "keywords": {answer_1},
-    "locations": {answer_2},
-    "job_type": "fulltime",
-    "max_age_days": 7,
-    "level_include": ["Entry", "Junior", "Associate", "Mid", "I", "II", "New Grad"],
-    "level_exclude": ["Senior", "Staff", "Principal", "Lead", "Director"],
-    "min_skills_overlap": 0.7
-  },
-  "prepare": {
-    "cover_letter_required": true,
-    "tailoring_checklist_steps": 10,
-    "max_bullets_per_role": 4,
-    "additional_documents": []
-  },
-  "submit": {
-    "parallel_instances": 3,
-    "max_retries_per_form": 3,
-    "screenshot_review": true,
-    "screenshot_confirmation": true,
-    "prefer_google_signin": {answer_6}
-  },
-  "preferences": {
-    "response_language": "match_user"
-  },
-  "automation": {
-    "manual_review": "{answer_review}",
-    "skip_on_no_sponsorship": true,
-    "skip_on_citizenship_required": true,
-    "auto_agree_terms": true,
-    "auto_register_accounts": true,
-    "auto_sign_esignatures": true
-  }
-}
-```
+If yes: read `${CLAUDE_SKILL_DIR}/references/secrets.example.md` for the format. Ask the user for each field, then write into `secrets.md`.
+If no: create an empty `secrets.md` with just `# Secrets — Skipped` so bootstrap won't ask again.
 
 ## Step 3: LibreOffice (auto-install)
 
