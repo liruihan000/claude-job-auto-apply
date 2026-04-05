@@ -6,8 +6,8 @@ description: >
   Triggers on: "apply", "job application", "auto apply", or job URLs.
 license: MIT
 compatibility: >
-  Best with Claude Code (subagent parallelism + Playwright MCP).
-  Other agents: works in sequential mode (no parallel submission).
+  Full parallel mode: Claude Code, Cursor 2.4+ (subagent + Playwright MCP).
+  Sequential mode: any agent with Playwright MCP support.
   Requires: Playwright MCP (browser automation), Node.js 18+.
   Optional: Gmail MCP (email verification), Indeed MCP (job search).
 metadata:
