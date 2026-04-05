@@ -5,6 +5,7 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 ## Setup Rules
 
 - **One step at a time.** Ask one question, wait for answer, then next question. Never dump all questions at once.
+- **Simple direct questions.** Ask "Your LinkedIn URL?" not a multi-choice menu. Never give numbered options for free-text inputs.
 - **Match user's language.** If they write in Chinese, respond in Chinese.
 - **Write files immediately** after getting each answer. Don't wait until the end.
 - **Confirm each step** before moving on: "Done. Next: ..."
