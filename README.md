@@ -10,7 +10,7 @@ Searches jobs, tailors every resume to the JD, writes cover letters, fills any A
 
 ```bash
 # 1. Install Claude Code
-npm install -g @anthropic-ai/claude-code
+curl -fsSL https://claude.ai/install.sh | bash  # or: npm install -g @anthropic-ai/claude-code
 
 # 2. Install the skill
 npx skills add liruihan000/claude-job-auto-apply
