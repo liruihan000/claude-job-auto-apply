@@ -10,6 +10,7 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 - **Write files immediately** after getting each answer.
 - **Confirm each step** before moving on: "Done. Next: ..."
 - **Auto-do everything possible.** Only ask when user input is truly needed.
+- **Skip what's already done.** `bootstrap.js` returns a `missing` list — only run steps for items in that list. If a file already exists and is valid, skip its step entirely without mentioning it.
 
 ## Step 1: Resume + Profile (most important)
 
