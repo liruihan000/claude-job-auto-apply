@@ -147,7 +147,9 @@ For missing connectors, tell user: "Connect [Service] in Claude Code settings (S
 ### Daily Automation (optional, ask after all required setup is done)
 Ask: "Do you want applications to run automatically every day? (y/n)"
 
-If yes, ask: "What time? (e.g. 6:00 AM)"
+If yes, ask: "What time? (e.g. 6:00 AM)
+
+Note: your computer must be powered on at the scheduled time. If it's asleep or shut down, the job will be skipped. Servers that run 24/7 are ideal."
 
 Then detect the environment and set up accordingly:
 
