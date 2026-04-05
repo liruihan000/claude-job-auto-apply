@@ -14,6 +14,7 @@ curl -fsSL https://claude.ai/install.sh | bash  # or: npm install -g @anthropic-
 
 # 2. Install the skill
 npx skills add liruihan000/claude-job-auto-apply
+# or manually: git clone https://github.com/liruihan000/claude-job-auto-apply.git .claude/skills/job-auto-apply
 
 # 3. Run
 claude --dangerously-skip-permissions
