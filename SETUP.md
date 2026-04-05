@@ -76,7 +76,9 @@ Alternative for N=1: `/plugin install playwright` (no `.mcp.json` needed).
 
 If user has existing `.mcp.json`, show how to merge playwright entries.
 
-After creating, tell user: **"Please restart Claude Code for browser instances to load, then run /job-auto-apply again."**
+After creating, tell user:
+1. **"Restart Claude Code for browser instances to load."**
+2. **"On the first run, the browser may ask you to log into Google or job portals manually. This only happens once — after that, login sessions are saved in persistent browser profiles and reused automatically."**
 
 ### Resume templates (ask BEFORE user-profile)
 Tell user: "Place at least one resume file (.docx or .pdf) in `./templates/`."
