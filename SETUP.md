@@ -5,7 +5,7 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 ## Setup Rules
 
 - **One step at a time.** Ask one question, wait for answer, then next question. Never dump all questions at once.
-- **Simple direct questions.** Ask "Your LinkedIn URL?" not a multi-choice menu. Never give numbered options for free-text inputs.
+- **Simple direct questions.** Just ask and let user type. Never give numbered option menus. No "1. I'll type it / 2. Skip" — just ask the question directly. Example: "Your password for job portals?" and user types the answer.
 - **Match user's language.** If they write in Chinese, respond in Chinese.
 - **Write files immediately** after getting each answer. Don't wait until the end.
 - **Confirm each step** before moving on: "Done. Next: ..."
@@ -109,9 +109,9 @@ Write answers directly into user-profile.md — user should not need to edit the
 ### `secrets.md`
 Copy from `${CLAUDE_SKILL_DIR}/references/secrets.example.md` to **project root** `./secrets.md`.
 Ask user directly:
-- "What email do you use for job portal accounts?"
-- "Default password for auto-registration?" 
-- "Prefer Google Sign-In when available?"
+- "Some job sites (Workday, Oracle, Greenhouse) require creating an account before applying. What email should the agent use to register? (Can be the same as your resume email)"
+- "Default password for these auto-registrations?"
+- "Prefer Google Sign-In when available? (Faster, avoids creating separate accounts)"
 Write answers into secrets.md.
 
 ### `CLAUDE.md`
