@@ -138,6 +138,7 @@ Submit application to {COMPANY} — {ROLE}.
 **ONLY use `{PLAYWRIGHT_PREFIX}*` tools. Never use other playwright instances.**
 **Resume**: {RESUME_PATH}
 **Cover letter**: {COVER_LETTER_PATH} (if exists)
+**Additional documents**: {ADDITIONAL_DOCS} (from config.prepare.additional_documents — e.g. transcript, writing sample, portfolio)
 **Application folder**: {APP_FOLDER}
 
 Read `user-profile.md` for experience dates/titles/EEO defaults.
