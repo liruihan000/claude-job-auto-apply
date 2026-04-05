@@ -67,16 +67,37 @@ If user has existing `.mcp.json`, show how to merge playwright entries.
 
 After creating, tell user: **"Please restart Claude Code for browser instances to load, then run /job-auto-apply again."**
 
+### Resume templates (ask BEFORE user-profile)
+Tell user: "Place at least one resume file (.docx or .pdf) in `./templates/`."
+
+If user has added a template, read it immediately — extract all available info:
+- Name, contact, location, links
+- Work experience (companies, titles, dates, bullets)
+- Education (schools, degrees, dates)
+- Skills
+- Projects
+
 ### `user-profile.md`
 Copy from `${CLAUDE_SKILL_DIR}/references/user-profile.example.md` to **project root** `./user-profile.md`.
-Tell user: "Please fill in your experience, skills, education, and contact info in this file. This is the most important file — the AI uses it to tailor every resume."
+
+**Auto-fill from resume:** If a resume template was provided above, automatically populate user-profile.md with all extracted info. Fill in every field that can be derived from the resume.
+
+**Then ask user to fill gaps:** After auto-fill, check what's still missing and ask:
+- Contact info not in resume? (phone, email, LinkedIn, GitHub)
+- Work authorization / visa status?
+- EEO defaults? (gender, race, veteran, disability)
+- Additional bullet variants per role? ("Want to add more bullet options for [Role]?")
+- Any roles or projects not on the resume?
+
+Write answers directly into user-profile.md — user should not need to edit the file manually.
 
 ### `secrets.md`
 Copy from `${CLAUDE_SKILL_DIR}/references/secrets.example.md` to **project root** `./secrets.md`.
-Tell user: "Fill in your email and default password for ATS portals. Prefer Google Sign-In if possible."
-
-### Resume templates
-Tell user: "Place at least one .docx resume file in `./templates/`. Start with one general resume — the AI will tailor it per application."
+Ask user directly:
+- "What email do you use for job portal accounts?"
+- "Default password for auto-registration?" 
+- "Prefer Google Sign-In when available?"
+Write answers into secrets.md.
 
 ### `CLAUDE.md`
 Auto-generate in project root. Use the actual resolved path of `${CLAUDE_SKILL_DIR}`:
