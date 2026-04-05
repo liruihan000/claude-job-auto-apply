@@ -39,7 +39,7 @@ Ask: "What locations?" → update locations.
 Ask: "How many applications per day?" → update daily_target.
 
 ### Playwright Browser Setup
-Ask: "How many parallel browsers do you want? (1-10, recommended: 3)
+Ask: "How many parallel browsers? (recommended: 3)
 
 This controls how many job applications are submitted at the same time. Each browser is an independent window that fills and submits one application. 3 browsers = 3 applications submitted simultaneously.
 
