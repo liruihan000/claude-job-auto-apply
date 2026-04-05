@@ -166,3 +166,17 @@ Then detect the environment and set up accordingly:
 
 **Changing schedule later:**
 User can say "change auto-apply to 8 AM" or "disable daily auto-apply" at any time. Update crontab accordingly.
+
+### Final Check (always ask at the end of setup)
+Ask: "Anything else you'd like to customize? For example:
+- Specific companies to target or avoid
+- Additional job boards to search
+- Resume rules or preferences
+- Application preferences"
+
+If user has requests, update the appropriate files:
+- Job preferences → `config.json`
+- Search platforms → `${CLAUDE_SKILL_DIR}/references/search-guide.md`
+- Resume rules → `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
+- ATS workarounds → `${CLAUDE_SKILL_DIR}/ats-handlers/`
+- Do NOT modify `SKILL.md` — it is the core pipeline logic and should not be auto-edited.
