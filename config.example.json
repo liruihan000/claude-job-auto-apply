@@ -33,7 +33,7 @@
   },
 
   "automation": {
-    "manual_review": false,
+    "manual_review": null,
     "skip_on_no_sponsorship": true,
     "skip_on_citizenship_required": true,
     "auto_agree_terms": true,
