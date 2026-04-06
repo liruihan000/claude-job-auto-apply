@@ -127,13 +127,16 @@ Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md`
 2. Research FIRST — read original JD from source + company info before any tailoring
 3. Select the best matching resume template
 4. Follow every step of the tailoring checklist
-5. Write resume.md (tailored resume content)
-6. Write cover_letter.md (if config.prepare.cover_letter_required) — must reference specific company/product details from research
-7. Write notes.md with: company info, role, URL, template used, keywords mirrored, tailoring decisions, company research summary
-8. Write STATUS.md as ⬜ NOT SUBMITTED
-9. Do NOT submit anything — only prepare materials
-10. Do NOT fabricate experience — only use info from the resume template
-11. Return "PREPARED: {COMPANY} — {ROLE}" when done
+5. Write resume.md (tailored resume content) and resume-config.json (structured data for DOCX generation)
+6. Generate DOCX: `node ${CLAUDE_SKILL_DIR}/scripts/create_resume.js {APP_FOLDER}/resume-config.json {APP_FOLDER}/resume.docx`
+7. Generate PDF: `libreoffice --headless --convert-to pdf --outdir {APP_FOLDER} {APP_FOLDER}/resume.docx`
+8. Write cover_letter.md (if config.prepare.cover_letter_required) — must reference specific company/product details from research
+9. If cover letter: `node ${CLAUDE_SKILL_DIR}/scripts/create_cover_letter.js {APP_FOLDER}/cover-letter-config.json {APP_FOLDER}/cover_letter.docx` then convert to PDF
+10. Write notes.md with: company info, role, URL, template used, keywords mirrored, tailoring decisions, company research summary
+11. Write STATUS.md as ⬜ NOT SUBMITTED
+12. Do NOT submit anything — only prepare materials
+13. Do NOT fabricate experience — only use info from the resume template
+14. Return "PREPARED: {COMPANY} — {ROLE}" when done
 ```
 
 ---
