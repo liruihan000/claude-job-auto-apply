@@ -18,6 +18,9 @@ npx skills add liruihan000/claude-job-auto-apply
 
 # 3. Run
 claude --dangerously-skip-permissions
+
+# Headless (no monitor / remote server / display switched away)
+xvfb-run claude --dangerously-skip-permissions -p '/job-auto-apply'
 ```
 
 Then type `/job-auto-apply`. First run guides you through setup. After that, it auto-starts on every session.
