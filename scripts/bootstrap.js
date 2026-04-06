@@ -157,20 +157,9 @@ if (fs.existsSync(mcpPath)) {
     .map(k => ({ name: k, prefix: `mcp__${k}__`, source: 'project' }));
 }
 
-// Check global plugin
-const globalPluginPaths = [
-  path.join(homeDir, '.claude', 'plugins', 'marketplaces', 'claude-plugins-official', 'external_plugins', 'playwright', '.mcp.json'),
-  path.join(homeDir, '.claude', 'plugins', 'playwright', '.mcp.json'),
-];
-for (const gp of globalPluginPaths) {
-  if (fs.existsSync(gp) && playwrightInstances.length === 0) {
-    playwrightInstances.push({ name: 'playwright', prefix: 'mcp__playwright__', source: 'global-plugin' });
-  }
-}
-
 if (playwrightInstances.length === 0) {
   step4.status = 'missing';
-  step4.details.push('No Playwright MCP found (no project .mcp.json or global plugin)');
+  step4.details.push('No Playwright MCP found in project .mcp.json — SETUP will create it');
 } else {
   const needed = (config.submit && config.submit.parallel_instances) || 1;
   if (playwrightInstances.length < needed) {
