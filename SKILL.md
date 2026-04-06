@@ -147,6 +147,7 @@ Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md`
 5. Write resume.md (tailored resume content) and resume-config.json (structured data for DOCX generation)
 6. Generate DOCX: `node ${CLAUDE_SKILL_DIR}/scripts/create_resume.js {APP_FOLDER}/resume-config.json {APP_FOLDER}/resume.docx`
 7. Generate PDF: `libreoffice --headless --convert-to pdf --outdir {APP_FOLDER} {APP_FOLDER}/resume.docx`
+7a. **Page check**: Read the generated PDF and verify it is exactly 1 page. If >1 page: reduce bullets (keep max 3-4 per role), shorten summary, remove least relevant role/project, then regenerate DOCX+PDF. If <1 page (too much whitespace): add bullets or expand skills. Repeat until exactly 1 full page.
 8. Write cover_letter.md (if config.prepare.cover_letter_required) — must reference specific company/product details from research
 9. If cover letter: `node ${CLAUDE_SKILL_DIR}/scripts/create_cover_letter.js {APP_FOLDER}/cover-letter-config.json {APP_FOLDER}/cover_letter.docx` then convert to PDF
 10. Write notes.md with: company info, role, URL, template used, keywords mirrored, tailoring decisions, company research summary
