@@ -151,9 +151,10 @@ Prepare application materials for {COMPANY} — {ROLE}.
 
 **Step 0 — Research:**
 1. Navigate to {JOB_URL} using WebFetch or Playwright and read the FULL job description
-2. Find the company website (usually linked in the JD or search "{COMPANY} about")
-3. Read the company's About/Mission page — note: industry, product, size, stage, culture
-4. Save all findings for use in resume tailoring and cover letter
+2. Extract JD keywords and save to `{APP_FOLDER}/jd-keywords.json` with format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`
+3. Find the company website (usually linked in the JD or search "{COMPANY} about")
+4. Read the company's About/Mission page — note: industry, product, size, stage, culture
+5. Save all findings for use in resume tailoring and cover letter
 
 **Step 1 — Prepare materials:**
 Select template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md` — read its content for experience/skills.

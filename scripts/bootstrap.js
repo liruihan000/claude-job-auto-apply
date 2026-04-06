@@ -140,6 +140,17 @@ try {
   step3.details.push('libreoffice not installed (install: sudo apt-get install -y libreoffice-writer-nogui)');
 }
 
+// Check npm dependencies (docx, pdfjs-dist)
+const requiredNpmPackages = ['docx', 'pdfjs-dist'];
+for (const pkg of requiredNpmPackages) {
+  try {
+    require.resolve(pkg);
+  } catch (e) {
+    step3.status = step3.status === 'ok' ? 'incomplete' : step3.status;
+    step3.details.push(`npm package "${pkg}" not installed (run: npm install ${pkg})`);
+  }
+}
+
 // ============================================================
 // Step 4: Playwright
 // ============================================================
