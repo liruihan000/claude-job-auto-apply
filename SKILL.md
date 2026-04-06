@@ -171,33 +171,35 @@ Replace `{variables}`, pass to Agent tool:
 ```
 Submit application to {COMPANY} — {ROLE}.
 
-**Job URL**: {JOB_URL}
-**ONLY use `{PLAYWRIGHT_PREFIX}*` tools. Never use other playwright instances.**
-**Resume**: {RESUME_PATH}
-**Cover letter**: {COVER_LETTER_PATH} (if exists)
-**Additional documents**: {ADDITIONAL_DOCS} (from config.prepare.additional_documents — e.g. transcript, writing sample, portfolio)
-**Application folder**: {APP_FOLDER}
+**Goal:** Navigate to {JOB_URL}, complete the entire application, and submit it.
 
-Read `user-profile.md` for personal info (contact, work auth, EEO defaults).
-For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-handlers/` if the platform is recognized (workday.md, greenhouse.md, lever.md, indeed.md, taleo.md, oracle.md, etc).
+**Tools:** ONLY use `{PLAYWRIGHT_PREFIX}*` tools. Never use other playwright instances.
 
-**Contact info & form-fill data:** Read `user-profile.md`
-**Credentials & login:** Read `secrets.md`
+**Data sources:**
+- `user-profile.md` — personal info, contact, work auth, EEO defaults
+- `secrets.md` — credentials for login/registration
+- Resume: {RESUME_PATH}
+- Cover letter: {COVER_LETTER_PATH} (if exists)
+- Additional documents: {ADDITIONAL_DOCS}
+- ATS strategies: `${CLAUDE_SKILL_DIR}/ats-handlers/` (read matching platform file if recognized)
 
-**Rules:**
-1. Navigate → Apply → auto-agree all terms/cookies/eSignatures (if config.automation.auto_agree_terms)
-2. Auto-register if needed (if config.automation.auto_register_accounts)
-3. Upload resume + cover letter via browser_file_upload
-4. Fill ALL fields — autocomplete fields: browser_type slowly:true → click dropdown
-5. Experience/Education: fill ALL roles from tailored resume, never guess dates
-6. Screening Qs: authorized=Yes, sponsorship=Yes (+explanation), 18+=Yes, background=Yes, previously worked=No
-7. After any "Yes", check for follow-up explanation fields
-8. PRE-SUBMIT: JS check all required fields filled, no "Select..." dropdowns, no empty conditionals
-9. Screenshot → {APP_FOLDER}/review-screenshot.png (if config.submit.screenshot_review)
-10. Submit → screenshot → {APP_FOLDER}/confirmation-screenshot.png (if config.submit.screenshot_confirmation)
-11. Write {APP_FOLDER}/STATUS.md as ✅ SUBMITTED
-12. Return "SUCCESS" or "FAILED: [reason]"
-13. If any single form interaction took >config.submit.max_retries_per_form retries, append: "FRICTION: [what happened] → [what worked]"
+**Approach:** Observe the page at each step, decide what to do next. Every ATS is different — adapt to what you see rather than following a fixed sequence. General flow: navigate → find apply button → fill forms → upload files → review → submit. But let the page guide you.
+
+**Constraints:**
+- Auto-agree all terms/cookies/eSignatures (if config.automation.auto_agree_terms)
+- Auto-register accounts if needed (if config.automation.auto_register_accounts)
+- Fill ALL required fields — never leave a field empty or on "Select..."
+- Screening questions: authorized=Yes, sponsorship=Yes (+explanation), 18+=Yes, background=Yes, previously worked=No. Check for follow-up fields after each answer.
+- Experience/Education dates must match the tailored resume exactly — never guess
+- Before submitting: verify all required fields are filled
+- Screenshot before submit → {APP_FOLDER}/review-screenshot.png (if config.submit.screenshot_review)
+- Screenshot after submit → {APP_FOLDER}/confirmation-screenshot.png (if config.submit.screenshot_confirmation)
+- If stuck on any interaction for >config.submit.max_retries_per_form retries, skip and report why
+
+**Output:**
+- Write {APP_FOLDER}/STATUS.md as ✅ SUBMITTED
+- Return "SUCCESS" or "FAILED: [reason]"
+- If friction encountered, append: "FRICTION: [what happened] → [what worked]"
 ```
 
 ---
