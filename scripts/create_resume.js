@@ -66,11 +66,11 @@ const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
 const PAGE_WIDTH = 12240;
 const PAGE_HEIGHT = 15840;
 const MARGIN = 720; // 0.5 inch
-const FONT = "Calibri";
+const FONT = "Times New Roman";
 const COLOR_BLACK = "000000";
-const COLOR_DARK = "333333";
-const COLOR_ACCENT = "2B579A";
-const LINE_COLOR = "999999";
+const COLOR_DARK = "000000";
+const COLOR_ACCENT = "000000";
+const LINE_COLOR = "000000";
 
 // --- Helpers ---
 function sectionHeader(text) {
@@ -89,23 +89,25 @@ function sectionHeader(text) {
 }
 
 function jobHeader(company, location, title, dates) {
+  // Line 1: Company (bold left) + Dates (bold right)
+  // Line 2: Title (italic left) + Location (italic right)
   return [
     new Paragraph({
       spacing: { before: 140, after: 0 },
       tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
       children: [
-        new TextRun({ text: company, bold: true, size: 21, font: FONT, color: COLOR_BLACK }),
+        new TextRun({ text: company, bold: true, size: 20, font: FONT, color: COLOR_BLACK }),
         new TextRun({ text: "\t", font: FONT }),
-        new TextRun({ text: location, size: 20, font: FONT, color: COLOR_DARK, italics: true }),
+        new TextRun({ text: dates, bold: true, size: 20, font: FONT, color: COLOR_BLACK }),
       ],
     }),
     new Paragraph({
-      spacing: { before: 20, after: 60 },
+      spacing: { before: 20, after: 40 },
       tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
       children: [
         new TextRun({ text: title, italics: true, size: 20, font: FONT, color: COLOR_DARK }),
         new TextRun({ text: "\t", font: FONT }),
-        new TextRun({ text: dates, size: 20, font: FONT, color: COLOR_DARK }),
+        new TextRun({ text: location, italics: true, size: 20, font: FONT, color: COLOR_DARK }),
       ],
     }),
   ];
@@ -125,9 +127,8 @@ function bulletPoint(text) {
 function skillLine(category, skills) {
   return new Paragraph({
     spacing: { before: 30, after: 30 },
-    indent: { left: 180 },
     children: [
-      new TextRun({ text: category + ": ", bold: true, size: 20, font: FONT, color: COLOR_BLACK }),
+      new TextRun({ text: "• " + category + ": ", bold: true, size: 20, font: FONT, color: COLOR_BLACK }),
       new TextRun({ text: skills, size: 20, font: FONT, color: COLOR_DARK }),
     ],
   });
@@ -164,7 +165,7 @@ children.push(new Paragraph({
   alignment: AlignmentType.CENTER,
   spacing: { after: 40 },
   children: [
-    new TextRun({ text: config.name, bold: true, size: 32, font: FONT, color: COLOR_BLACK }),
+    new TextRun({ text: config.name, bold: true, size: 40, font: FONT, color: COLOR_BLACK }),
   ],
 }));
 

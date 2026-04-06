@@ -56,7 +56,7 @@ Before finalizing:
 - File format: .docx preferred (some ATS struggle with PDF parsing)
 
 ### 10. Verify 1-Page Fit
-The final resume must fit a single US Letter page. If it overflows, cut the least relevant content first (optional roles → less relevant bullets → projects). **Content must fill at least the full page — no large blank spaces.** If there is significant whitespace, add more relevant bullets, include optional roles/projects, or expand the skills section until the page is filled.
+The final resume must fit a single US Letter page. If it overflows, cut the least relevant content first (optional roles → less relevant bullets → projects). **Minimize blank space — bottom whitespace should be ≤ 2 lines.** If there is significant whitespace, add more relevant bullets, include optional roles/projects, or expand the skills section. A well-filled page signals strong experience.
 
 ## ATS Score Self-Check
 

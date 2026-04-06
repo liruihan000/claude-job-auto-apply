@@ -160,6 +160,7 @@ Prepare application materials for {COMPANY} — {ROLE}.
 Select template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md` — read its content for experience/skills.
 Read `user-profile.md` for personal info (contact, work auth, EEO).
 Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` — use the full JD and company info.
+**Format**: All generated resumes must follow `${CLAUDE_SKILL_DIR}/references/resume-format-spec.md` (Times New Roman, black section headers, 2-line company format, bullet skills). `create_resume.js` enforces this automatically.
 Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` — reference specific company details.
 
 **Rules:**
@@ -227,6 +228,7 @@ Submit application to {COMPANY} — {ROLE}.
 - **Job search**: `${CLAUDE_SKILL_DIR}/references/search-guide.md` — platform methods, deduplication
 - **Job selection**: `${CLAUDE_SKILL_DIR}/references/selection-strategy.md` — filters, prioritization
 - **Resume tailoring**: `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` — 8-step checklist
+- **Resume format**: `${CLAUDE_SKILL_DIR}/references/resume-format-spec.md` — Times New Roman, black headers, 2-line company format, bullet skills
 - **Cover letter**: `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` — structure, rules
 - **Template selection**: `${CLAUDE_SKILL_DIR}/references/template-guide.md` — which template for which JD
 - **Filing & tracking**: `${CLAUDE_SKILL_DIR}/references/filing-guide.md` — folder structure, TRACKER format

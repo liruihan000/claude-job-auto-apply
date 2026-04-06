@@ -10,17 +10,16 @@ Place one or more `.docx` resume files in the templates folder. The agent select
 
 If you only have one template, the agent uses it for everything and tailors the content per JD.
 
-## Recommended Template Strategy
+## Active Templates
 
-Create templates by target role direction. Name them descriptively:
+Two templates are in use. Select based on JD keywords:
 
 | Template name | Best for JDs mentioning... |
 |---------------|---------------------------|
-| `fullstack-ai.docx` | React, Next.js, full-stack, AI, LLM, startup |
-| `backend.docx` | Backend, APIs, microservices, distributed systems |
-| `platform-infra.docx` | Platform, DevOps, SRE, K8s, Terraform |
-| `ai-ml-infra.docx` | ML infra, MLOps, AI platform, model serving, RAG |
-| `general-swe.docx` | Generic SWE, unclear specialization |
+| `ai-ml-infra.docx` | AI Engineer, ML Engineer, LLM, RAG, agent, AI platform, MLOps, applied AI, AI infrastructure |
+| `general-swe.docx` | Backend, Full-Stack, SWE, distributed systems, React, TypeScript, platform, DevOps, SRE |
+
+**Default**: when in doubt, use `general-swe.docx`.
 
 ## How the Agent Tailors
 
