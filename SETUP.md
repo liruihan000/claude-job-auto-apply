@@ -10,7 +10,7 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 - **Write files immediately** after getting each answer.
 - **Confirm each step** before moving on: "Done. Next: ..."
 - **Auto-do everything possible.** Only ask when user input is truly needed.
-- **Skip what's already done.** `bootstrap.js` returns a `steps` array. Each step has `status: "ok"|"missing"|"incomplete"` and `details`. Only run steps where status is NOT `"ok"`. If `"incomplete"`, fix only the items listed in `details`.
+- **CRITICAL: Skip what's already done.** `bootstrap.js` returns a `steps` array. Each step has `status: "ok"|"missing"|"incomplete"` and `details`. **You MUST check each step's status. ONLY run steps where status is NOT `"ok"`.** Do NOT start from Step 1 blindly — jump directly to the first failing step. If `"incomplete"`, fix only the items listed in `details`.
 - **Patch incomplete config.** If step 2 shows missing config fields, read the existing `config.json`, ask user only for fields that require user input, fill remaining missing fields with template defaults, and write back the updated config.
 
 ## Step 1: Resume + Profile (most important)
