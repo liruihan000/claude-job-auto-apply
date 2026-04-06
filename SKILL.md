@@ -29,17 +29,31 @@ metadata:
 
 Every time this skill is invoked:
 
-0. Run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` → load config + check readiness
+0. **Check user intent**: If the user's message contains a job URL or mentions a specific role/company AND asks a question or says "discuss"/"analyze"/"review"/"look at" → enter **Discussion Mode** (see below). Otherwise → continue to auto-apply flow.
+1. Run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` → load config + check readiness
    - If `ready: false` → read `${CLAUDE_SKILL_DIR}/SETUP.md` and guide user through missing items. **Do NOT proceed to any Phase. Do NOT attempt workarounds or alternative tools.**
    - Directories and TRACKER.md are auto-created by bootstrap.js
-1. Read `applications/TRACKER.md`
-2. Count `Submitted` column entries with today's date → `today_submitted`
-3. List ⬜ NOT SUBMITTED entries with materials ready
-4. Report: "Today: X/{config.daily_target} submitted, Y pending"
-5. If `today_submitted >= config.daily_target` → report done and stop
-6. Otherwise → enter Auto-Apply Pipeline immediately
+2. Read `applications/TRACKER.md`
+3. Count `Submitted` column entries with today's date → `today_submitted`
+4. List ⬜ NOT SUBMITTED entries with materials ready
+5. Report: "Today: X/{config.daily_target} submitted, Y pending"
+6. If `today_submitted >= config.daily_target` → report done and stop
+7. Otherwise → enter Auto-Apply Pipeline immediately
 
 **AUTONOMY:** If `config.automation.manual_review: false` → full autonomy, never ask user, never stop mid-loop. If `true` → pause between phases for user review before proceeding.
+
+---
+
+## Discussion Mode
+
+When the user wants to discuss a specific job rather than auto-apply:
+
+1. Read the job posting (via WebFetch, Playwright, or user-provided text)
+2. Analyze: role requirements, tech stack, team, company info
+3. Compare against the user's resumes in `uploaded-resumes/` and `user-profile.md`
+4. Discuss with the user: fit assessment, pros/cons, resume strategy, questions to ask
+5. **Do NOT enter the Auto-Apply Pipeline.** Stay in conversation until the user says to apply or ends the discussion.
+6. If the user says "apply" or "submit" → add to TRACKER.md and proceed to Phase 2 for this job only.
 
 ---
 
