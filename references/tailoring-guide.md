@@ -69,8 +69,13 @@ After tailoring, mentally score the resume:
 ## Rules
 
 - **Never fabricate experience** — only use information from the selected resume template
+- **Never add skills/tools not in the source resume** — if the source doesn't list Prometheus, Grafana, gRPC, LangGraph, etc., do NOT add them. Only reorder or rephrase existing skills.
+- **Never change job titles** — use the exact title from the source resume. Do not upgrade "Software Engineer" to "Technical Lead" or "Founding Engineer".
+- **Never change dates** — all start/end dates must match the source resume exactly. Do not extend, shorten, or move date ranges.
+- **Never inflate years of experience** — calculate from actual work history dates in the source resume. If total is ~3 years, write "3+ years", not "5+ years".
+- **Never add companies or roles not in the source resume** — only include positions that exist in the selected template.
 - **Never copy JD text verbatim** — rephrase in the user's voice
-- **Metrics matter** — prefer bullets with quantifiable results
+- **Metrics matter** — prefer bullets with quantifiable results, but only use metrics that exist in the source resume
 - **Read the full JD** before starting — understand what the company actually needs
-- **Exact keyword matching** — use the same terms as the JD, not synonyms
+- **Exact keyword matching** — use the same terms as the JD, but only for skills the user actually has in the source resume
 - **One resume per application** — never submit the same tailored resume twice
