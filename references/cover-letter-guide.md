@@ -28,7 +28,7 @@ This guide is read by the agent during Phase 2 (Prepare). Only generates if `con
 ## Rules
 
 - **Never generic** — every letter must reference the specific company and role
-- **Never fabricate** — only use experience from user-profile.md
+- **Never fabricate** — only use experience from the selected resume template
 - **Mirror JD language** — use the same terms the JD uses
 - **Keep it short** — hiring managers skim. 250-400 words max
 - **Match tone** — startup JD = conversational, enterprise JD = professional

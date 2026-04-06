@@ -8,7 +8,7 @@
  *
  * Paths:
  *   - skillDir: where the skill is installed (SKILL.md, references/, scripts/)
- *   - projectDir: user's working directory (config.json, templates/, applications/)
+ *   - projectDir: user's working directory (config.json, uploaded-resumes/, applications/)
  *
  * Usage: node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js
  */
@@ -28,7 +28,7 @@ const homeDir = require('os').homedir();
 const step1 = { step: 1, name: 'Resume + Profile', status: 'ok', details: [] };
 
 // templates
-const templatesDir = path.join(projectDir, 'templates');
+const templatesDir = path.join(projectDir, 'uploaded-resumes');
 let templateCount = 0;
 if (fs.existsSync(templatesDir)) {
   templateCount = fs.readdirSync(templatesDir).filter(f =>
@@ -37,7 +37,7 @@ if (fs.existsSync(templatesDir)) {
 }
 if (templateCount === 0) {
   step1.status = 'missing';
-  step1.details.push('No resume templates in templates/ (.docx/.pdf/.doc)');
+  step1.details.push('No resume templates in uploaded-resumes/ (.docx/.pdf/.doc)');
 }
 
 // user-profile.md — validate against example template
@@ -220,7 +220,7 @@ if (!cronConfigured) {
 const created = [];
 const dirs = [
   path.join(projectDir, 'applications'),
-  path.join(projectDir, 'templates'),
+  path.join(projectDir, 'uploaded-resumes'),
   path.join(projectDir, 'logs'),
 ];
 for (const d of dirs) {
@@ -260,7 +260,7 @@ const result = {
   paths: {
     skill: path.relative(projectDir, skillDir),
     project: projectDir,
-    templates: 'templates',
+    templates: 'uploaded-resumes',
     applications: 'applications',
     tracker: 'applications/TRACKER.md',
     logs: 'logs',

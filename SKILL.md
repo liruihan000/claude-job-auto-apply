@@ -60,8 +60,8 @@ Show the user the list of jobs found (company, role, platform, URL). Wait for us
 
 For each ⬜ job without materials:
 1. Create folder: `applications/YYYY-MM-DD_Company_Role/`
-2. Read `user-profile.md` for experience pool
-3. Select template per `${CLAUDE_SKILL_DIR}/references/template-guide.md`
+2. Select template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md`, read its content for experience/skills
+3. Read `user-profile.md` for personal info (contact, work auth, EEO)
 4. Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
 5. Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
 6. Generate DOCX via bundled scripts, then convert to PDF: `libreoffice --headless --convert-to pdf --outdir <folder> <file.docx>`
@@ -113,8 +113,8 @@ Prepare application materials for {COMPANY} — {ROLE}.
 4. Save all findings for use in resume tailoring and cover letter
 
 **Step 1 — Prepare materials:**
-Read `user-profile.md` for experience pool.
-Select template per `${CLAUDE_SKILL_DIR}/references/template-guide.md`.
+Select template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md` — read its content for experience/skills.
+Read `user-profile.md` for personal info (contact, work auth, EEO).
 Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` — use the full JD and company info.
 Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` — reference specific company details.
 
@@ -128,7 +128,7 @@ Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md`
 7. Write notes.md with: company info, role, URL, template used, keywords mirrored, tailoring decisions, company research summary
 8. Write STATUS.md as ⬜ NOT SUBMITTED
 9. Do NOT submit anything — only prepare materials
-10. Do NOT fabricate experience — only use info from user-profile.md
+10. Do NOT fabricate experience — only use info from the resume template
 11. Return "PREPARED: {COMPANY} — {ROLE}" when done
 ```
 
@@ -148,7 +148,7 @@ Submit application to {COMPANY} — {ROLE}.
 **Additional documents**: {ADDITIONAL_DOCS} (from config.prepare.additional_documents — e.g. transcript, writing sample, portfolio)
 **Application folder**: {APP_FOLDER}
 
-Read `user-profile.md` for experience dates/titles/EEO defaults.
+Read `user-profile.md` for personal info (contact, work auth, EEO defaults).
 For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-handlers/` if the platform is recognized (workday.md, greenhouse.md, lever.md, indeed.md, taleo.md, oracle.md, etc).
 
 **Contact info & form-fill data:** Read `user-profile.md`
@@ -159,7 +159,7 @@ For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-
 2. Auto-register if needed (if config.automation.auto_register_accounts)
 3. Upload resume + cover letter via browser_file_upload
 4. Fill ALL fields — autocomplete fields: browser_type slowly:true → click dropdown
-5. Experience/Education: read user-profile.md, fill ALL roles from tailored resume, never guess dates
+5. Experience/Education: fill ALL roles from tailored resume, never guess dates
 6. Screening Qs: authorized=Yes, sponsorship=Yes (+explanation), 18+=Yes, background=Yes, previously worked=No
 7. After any "Yes", check for follow-up explanation fields
 8. PRE-SUBMIT: JS check all required fields filled, no "Select..." dropdowns, no empty conditionals
@@ -180,7 +180,7 @@ For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-
 - **Cover letter**: `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` — structure, rules
 - **Template selection**: `${CLAUDE_SKILL_DIR}/references/template-guide.md` — which template for which JD
 - **Filing & tracking**: `${CLAUDE_SKILL_DIR}/references/filing-guide.md` — folder structure, TRACKER format
-- **User profile**: `user-profile.md` — experience pool, contact info, EEO
+- **User profile**: `user-profile.md` — personal info, contact, work auth, EEO
 - **Credentials**: `secrets.md` — ATS login, registration, Google Sign-In
 
 ---
@@ -192,7 +192,7 @@ For ATS-specific strategies, read the matching file in `${CLAUDE_SKILL_DIR}/ats-
   - **Everything that interacts with a web page** (form-filling, clicking, uploading, submitting, logging in, registering): **Playwright MCP (`mcp__playwright*`) ONLY.** Never use BrowserMCP, Claude-in-Chrome, or other browser tools.
   - If Playwright is unavailable, **STOP and run SETUP** — do not attempt alternative browser tools.
 - **Tailor every resume.** Never submit a template as-is.
-- **Never fabricate experience** — only info from user-profile.md.
+- **Never fabricate experience** — only use info from the resume templates in `uploaded-resumes/`.
 - **Pre-submit validation** — JS check all required fields before clicking submit.
 - **On error**: retry up to `config.submit.max_retries_per_form` times, then skip and log reason.
 - **Never stop** until daily target is met.

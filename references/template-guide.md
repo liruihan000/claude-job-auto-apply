@@ -2,7 +2,7 @@
 
 ## Location
 
-Templates are stored in `templates/` (in your project root).
+Templates are stored in `uploaded-resumes/` (in your project root).
 
 ## How It Works
 

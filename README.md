@@ -28,9 +28,9 @@ The agent walks you through setup interactively:
 
 1. **config.json** — asks your target roles, locations, daily goal, parallel browser count
 2. **.mcp.json** — generates Playwright browser config (you choose how many instances)
-3. **user-profile.md** — copies a template for your experience, skills, contact info
+3. **user-profile.md** — copies a template for your personal info, contact, work auth, EEO
 4. **secrets.md** — copies a template for ATS login credentials
-5. **templates/** — asks you to add at least one `.docx` resume
+5. **uploaded-resumes/** — asks you to add at least one `.docx` resume
 6. **MCP connectors** — checks for Gmail/Indeed, guides you to connect if missing
 7. **CLAUDE.md** — auto-generates so the agent starts automatically next session
 8. **Daily cron** *(optional)* — sets up fully unattended daily runs
@@ -42,9 +42,9 @@ All user files are created in your project root, not inside the skill directory.
 | File | Where | What |
 |------|-------|------|
 | `config.json` | Project root | Your settings (daily target, search keywords, parallelism) |
-| `user-profile.md` | Project root | Your experience, skills, education, contact info |
+| `user-profile.md` | Project root | Personal info, contact, work auth, EEO defaults |
 | `secrets.md` | Project root | ATS login credentials |
-| `templates/` | Project root | Your resume `.docx` files |
+| `uploaded-resumes/` | Project root | Your resume `.docx` files |
 | `applications/` | Project root | Generated per application (resume, CL, notes, status) |
 | `applications/TRACKER.md` | Project root | Single source of truth for all applications |
 | `CLAUDE.md` | Project root | Auto-generated — makes skill run on every session start |

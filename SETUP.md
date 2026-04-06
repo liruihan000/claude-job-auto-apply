@@ -15,7 +15,7 @@ This file is read by SKILL.md when `bootstrap.js` returns `ready: false`.
 
 ## Step 1: Resume + Profile (most important)
 
-Ask: "Drop your resume (.docx or .pdf) into the `templates/` folder, then tell me when it's there."
+Ask: "Drop your resume (.docx or .pdf) into the `uploaded-resumes/` folder, then tell me when it's there."
 
 Once available, read the resume and auto-extract everything into `user-profile.md`.
 **Follow the exact format in `${CLAUDE_SKILL_DIR}/references/user-profile.example.md`** — same sections, same field names, same structure.

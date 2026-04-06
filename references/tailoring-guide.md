@@ -18,7 +18,7 @@ Write 2-3 sentences mirroring the job posting's core requirements. Never reuse a
 
 ### 3. ATS Keyword Optimization
 Extract top 10-15 keywords from the JD. For each keyword:
-- Check if it appears in user-profile.md (the user actually has this skill)
+- Check if it appears in the selected resume template (the user actually has this skill)
 - If yes: ensure it appears at least once in the resume (summary, bullets, or skills)
 - If no: skip — never add skills the user doesn't have
 - Use the **exact phrasing** from the JD (e.g. "React.js" not "React", "CI/CD" not "continuous integration") — ATS systems match exact strings
@@ -35,16 +35,16 @@ Select only the `config.prepare.max_bullets_per_role` most relevant bullets per 
 - Use action verbs that match the JD (e.g. JD says "design and build" → bullet starts with "Designed and built")
 
 ### 6. Adjust Job Titles
-If user-profile.md provides title variants for a role, select the variant that best matches the target position title.
+If the selected resume template provides title variants for a role, select the variant that best matches the target position title.
 
 ### 7. Adjust Skills Section
 - Reorder skill categories so the most JD-relevant category leads
-- Add JD-specific tools the user actually knows (check user-profile.md)
+- Add JD-specific tools the user actually knows (check the selected resume template)
 - Group skills to match JD sections (e.g. if JD has "Languages" and "Frameworks" separately, match that structure)
 - Remove skills irrelevant to this specific role to reduce noise
 
 ### 8. Include/Exclude Optional Roles
-If user-profile.md marks certain roles as "include when relevant" or "omit when space tight", make the decision based on JD relevance and page space.
+If the selected resume template marks certain roles as "include when relevant" or "omit when space tight", make the decision based on JD relevance and page space.
 
 ### 9. ATS Compatibility Check
 Before finalizing:
@@ -68,7 +68,7 @@ After tailoring, mentally score the resume:
 
 ## Rules
 
-- **Never fabricate experience** — only use information from user-profile.md
+- **Never fabricate experience** — only use information from the selected resume template
 - **Never copy JD text verbatim** — rephrase in the user's voice
 - **Metrics matter** — prefer bullets with quantifiable results
 - **Read the full JD** before starting — understand what the company actually needs

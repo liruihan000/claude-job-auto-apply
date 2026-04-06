@@ -10,7 +10,7 @@ Read all criteria from config.json. Apply in order — reject early to save time
 4. **Recency**: Prefer recent posts. Skip older than `config.search.max_age_days`
 5. **Sponsorship**: Skip if `config.automation.skip_on_no_sponsorship` and JD says "no sponsorship" / "US citizen only" / "clearance required"
 6. **Citizenship**: Skip if `config.automation.skip_on_citizenship_required` and JD requires US citizenship
-7. **Skills overlap**: Estimate overlap between JD requirements and user-profile.md. Skip if below `config.search.min_skills_overlap`
+7. **Skills overlap**: Estimate overlap between JD requirements and the resume templates in `uploaded-resumes/`. Skip if below `config.search.min_skills_overlap`
 
 ## Prioritization
 
