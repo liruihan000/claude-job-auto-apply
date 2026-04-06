@@ -97,11 +97,18 @@ Can parallelize with subagents (no browser needed). Use the Prepare Subagent Pro
 
 ### Phase 2.5: Auto-Review (MANDATORY — always runs)
 
-After all materials are prepared, the **main agent** re-reads each tailored resume and compares it against the source resume in `uploaded-resumes/` and `user-profile.md`. Check:
+After all materials are prepared, the **main agent** reviews each application. Run these checks:
+
 1. **Content**: Apply the same rules from `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` to verify compliance.
 2. **Format**: Read the generated PDF and check for rendering issues — stray markdown characters (`*`, `**`, `#`), broken formatting, garbled text, missing sections.
 3. **Page fit**: Verify exactly 1 page — not overflowing, not too short.
-4. **AI writing detection**: Scan for AI-generated patterns and rewrite to sound natural. Red flags: "spearheaded", "leveraged", "utilized", "orchestrated", "cutting-edge", "state-of-the-art", stacked buzzwords without substance, gerund clause chains ("Driving innovation while leveraging..."), generic filler ("passionate about delivering impactful solutions"). Replace with concrete, specific language that sounds like a human wrote it.
+4. **AI writing detection + ATS keyword score**: Run `node ${CLAUDE_SKILL_DIR}/scripts/ats_score.js {APP_FOLDER}/resume.md {APP_FOLDER}/jd-keywords.json`. The agent must first extract JD keywords into `jd-keywords.json` (format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`). Check results:
+   - `ats_score < 60` → add missing keywords naturally into resume, regenerate
+   - `ai_phrases_found` → replace flagged phrases with suggested alternatives
+   - `ai_patterns_found` → rewrite affected sentences
+5. **ATS parse check**: Run `node ${CLAUDE_SKILL_DIR}/scripts/ats_parse_check.js {APP_FOLDER}/resume.pdf`. Check results:
+   - `status: FAIL` → fix errors (missing sections, bad formatting), regenerate
+   - `status: WARN` → review warnings, fix if possible
 
 Auto-fix any issues found, regenerate DOCX + PDF if changed.
 
