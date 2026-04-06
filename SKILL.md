@@ -29,7 +29,10 @@ metadata:
 
 Every time this skill is invoked:
 
-0. **Check user intent**: If the user's message contains a job URL or mentions a specific role/company AND asks a question or says "discuss"/"analyze"/"review"/"look at" → enter **Discussion Mode** (see below). Otherwise → continue to auto-apply flow.
+0. **Check user intent**: 
+   - If the user asks a question or says "discuss"/"analyze"/"review"/"look at" about a job → enter **Discussion Mode** (see below).
+   - If the user says "apply"/"submit"/"投" + a specific job URL or role → enter **Single Apply Mode**: skip Phase 1 (search), go directly to Phase 2 for that job only, then Phase 2.5 → Phase 3.
+   - Otherwise → continue to auto-apply flow.
 1. Run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` → load config + check readiness
    - If `ready: false` → read `${CLAUDE_SKILL_DIR}/SETUP.md` and guide user through missing items. **Do NOT proceed to any Phase. Do NOT attempt workarounds or alternative tools.**
    - Directories and TRACKER.md are auto-created by bootstrap.js
