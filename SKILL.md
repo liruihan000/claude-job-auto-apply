@@ -73,6 +73,15 @@ Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate. 
 **Review checkpoint (if `config.automation.manual_review: true`):**
 Show the user the list of jobs found (company, role, platform, URL). Wait for user to confirm which jobs to proceed with. Remove any rejected jobs from TRACKER.md.
 
+### Phase 1.5: Network Scan (optional — requires LinkedIn login in Playwright profile)
+
+For each company in TRACKER.md with ⬜ status:
+1. Navigate to LinkedIn: `linkedin.com/search/results/people/?keywords={COMPANY}&network=%5B%22F%22%5D` (filters to 1st-degree connections)
+2. If connections found at this company → add their name and title to the job's Notes column in TRACKER.md (e.g. "🤝 John Doe - SWE @ Company")
+3. Move jobs with connections to higher priority
+
+Skip this phase if LinkedIn is not logged in or if it gets blocked. Do not spend more than 30 seconds per company.
+
 ### Phase 2: Prepare
 
 For each ⬜ job without materials:
@@ -92,6 +101,7 @@ After all materials are prepared, the **main agent** re-reads each tailored resu
 1. **Content**: Apply the same rules from `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` to verify compliance.
 2. **Format**: Read the generated PDF and check for rendering issues — stray markdown characters (`*`, `**`, `#`), broken formatting, garbled text, missing sections.
 3. **Page fit**: Verify exactly 1 page — not overflowing, not too short.
+4. **AI writing detection**: Scan for AI-generated patterns and rewrite to sound natural. Red flags: "spearheaded", "leveraged", "utilized", "orchestrated", "cutting-edge", "state-of-the-art", stacked buzzwords without substance, gerund clause chains ("Driving innovation while leveraging..."), generic filler ("passionate about delivering impactful solutions"). Replace with concrete, specific language that sounds like a human wrote it.
 
 Auto-fix any issues found, regenerate DOCX + PDF if changed.
 
