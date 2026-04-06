@@ -69,8 +69,12 @@ For each ⬜ job without materials:
 
 Can parallelize with subagents (no browser needed). Use the Prepare Subagent Prompt Template below.
 
+### Phase 2.5: Auto-Review (MANDATORY — always runs)
+
+After all materials are prepared, the **main agent** re-reads each tailored resume and compares it against the source resume in `uploaded-resumes/` and `user-profile.md`. Apply the same rules from `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` to verify compliance. Auto-fix any issues found, regenerate DOCX + PDF if changed.
+
 **Review checkpoint (if `config.automation.manual_review: true`):**
-Show the user a summary of each prepared application (company, role, resume highlights, cover letter summary). Let user review the generated files. Wait for user to confirm which applications to submit. Mark any rejected ones as ❌ SKIPPED in TRACKER.md.
+After auto-review, show the user a summary of each prepared application and any issues found/fixed. Wait for user to confirm which to submit. Mark rejected ones as ❌ SKIPPED in TRACKER.md.
 
 ### Phase 3: Submit
 
