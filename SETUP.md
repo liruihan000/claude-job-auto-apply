@@ -70,16 +70,16 @@ If no: create an empty `secrets.md` with just `# Secrets — Skipped` so bootstr
      "mcpServers": {
        "playwright-1": {
          "command": "npx",
-         "args": ["@playwright/mcp@latest", "--user-data-dir", "{HOME}/.playwright/profile-1"]
+         "args": ["@playwright/mcp@latest", "--user-data-dir", ".playwright/profile-1"]
        },
        "playwright-2": {
          "command": "npx",
-         "args": ["@playwright/mcp@latest", "--user-data-dir", "{HOME}/.playwright/profile-2"]
+         "args": ["@playwright/mcp@latest", "--user-data-dir", ".playwright/profile-2"]
        }
      }
    }
    ```
-   - **Replace `{HOME}` with the user's actual home directory** (run `echo $HOME` to get it). Do NOT use `~` — it won't be expanded in JSON args.
+   - Use relative path `.playwright/profile-{i}` — profiles are project-local, each project gets its own browser sessions.
    - Preserve any existing non-playwright entries in `.mcp.json`
 
 5. Tell user: "Playwright configured. First run may need manual login to Google/job sites — after that it's automatic."
