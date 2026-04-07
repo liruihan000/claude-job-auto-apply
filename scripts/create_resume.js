@@ -48,8 +48,11 @@
 const fs = require("fs");
 const {
   Document, Packer, Paragraph, TextRun, AlignmentType,
-  BorderStyle, TabStopType, TabStopPosition, ExternalHyperlink
+  BorderStyle, TabStopType, ExternalHyperlink
 } = require("docx");
+
+// Right tab stop position = page width (12240) - left margin (720) - right margin (720) = 10800 twips
+const RIGHT_TAB = 10800;
 
 // --- Read config ---
 const configPath = process.argv[2];
@@ -94,7 +97,7 @@ function jobHeader(company, location, title, dates) {
   return [
     new Paragraph({
       spacing: { before: 140, after: 0 },
-      tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+      tabStops: [{ type: TabStopType.RIGHT, position: RIGHT_TAB }],
       children: [
         new TextRun({ text: company, bold: true, size: 20, font: FONT, color: COLOR_BLACK }),
         new TextRun({ text: "\t", font: FONT }),
@@ -103,7 +106,7 @@ function jobHeader(company, location, title, dates) {
     }),
     new Paragraph({
       spacing: { before: 20, after: 40 },
-      tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+      tabStops: [{ type: TabStopType.RIGHT, position: RIGHT_TAB }],
       children: [
         new TextRun({ text: title, italics: true, size: 20, font: FONT, color: COLOR_DARK }),
         new TextRun({ text: "\t", font: FONT }),
@@ -138,7 +141,7 @@ function eduLine(school, location, degree, dates) {
   return [
     new Paragraph({
       spacing: { before: 80, after: 0 },
-      tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+      tabStops: [{ type: TabStopType.RIGHT, position: RIGHT_TAB }],
       children: [
         new TextRun({ text: school, bold: true, size: 20, font: FONT, color: COLOR_BLACK }),
         new TextRun({ text: "\t", font: FONT }),
@@ -147,7 +150,7 @@ function eduLine(school, location, degree, dates) {
     }),
     new Paragraph({
       spacing: { before: 10, after: 40 },
-      tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+      tabStops: [{ type: TabStopType.RIGHT, position: RIGHT_TAB }],
       children: [
         new TextRun({ text: degree, italics: true, size: 20, font: FONT, color: COLOR_DARK }),
         new TextRun({ text: "\t", font: FONT }),

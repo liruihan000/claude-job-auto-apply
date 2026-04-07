@@ -44,7 +44,7 @@ If the selected resume template provides title variants for a role, select the v
 - Remove skills irrelevant to this specific role to reduce noise
 
 ### 8. Include/Exclude Optional Roles
-If the selected resume template marks certain roles as "include when relevant" or "omit when space tight", make the decision based on JD relevance and page space.
+**All roles in the template MUST appear in the tailored resume** — do not silently drop any role. If space is tight, reduce bullets per role (minimum 1 bullet) rather than omitting the role entirely. Only omit a role if the template explicitly marks it as "omit when space tight" AND the resume would exceed 1 page even after trimming.
 
 ### 9. ATS Compatibility Check
 Before finalizing:

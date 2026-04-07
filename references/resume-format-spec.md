@@ -42,6 +42,7 @@ Line 2: [Title italic left]               [City italic right]
 - **Items**: normal weight
 - Each category on exactly **one line** (≤ ~110 chars total at 10pt TNR)
 - Max **4 categories**
+- **Each category MUST fit on exactly ONE line** — never wrap. If the line exceeds ~110 characters, remove lower-priority items until it fits. Count characters including the `• Category: ` prefix.
 - space_after=1.5pt per line
 
 ## Bullet Points
