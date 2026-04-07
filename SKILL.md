@@ -68,7 +68,9 @@ Find jobs until `pending + today_submitted >= config.daily_target`.
 
 Search `config.search.platforms` in parallel per `${CLAUDE_SKILL_DIR}/references/search-guide.md`.
 Searches may use Playwright MCP, WebSearch, or WebFetch for job discovery.
-Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate. Add selected jobs to TRACKER.md as ⬜.
+Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate.
+
+**After each batch of jobs found — immediately add to TRACKER.md as ⬜ NOT SUBMITTED.** Do not wait until all searches finish. Add each job as it is selected, one row at a time.
 
 **Review checkpoint (if `config.automation.manual_review: true`):**
 Show the user the list of jobs found (company, role, platform, URL). Wait for user to confirm which jobs to proceed with. Remove any rejected jobs from TRACKER.md.
@@ -95,6 +97,9 @@ For each ⬜ job without materials:
 
 Can parallelize with subagents (no browser needed). Use the Prepare Subagent Prompt Template below.
 
+**After all Prepare subagents complete — sync TRACKER.md:**
+Scan every `applications/*/STATUS.md`. For each application folder that has `STATUS.md` with content `📁 PREPARED` or `✅ SUBMITTED`, ensure the corresponding TRACKER.md row reflects that status. This is the source of truth — always sync from STATUS.md files, never guess.
+
 ### Phase 2.5: Auto-Review (MANDATORY — always runs)
 
 After all materials are prepared, the **main agent** reviews each application. Run these checks:
@@ -119,16 +124,20 @@ After auto-review, show the user a summary of each prepared application and any 
 
 ```
 WHILE today_submitted < config.daily_target:
-    1. Pick up to N jobs with ⬜ + materials ready (N = config.submit.parallel_instances)
+    1. Pick up to N jobs whose STATUS.md contains `📁 PREPARED` (N = config.submit.parallel_instances)
     2. Launch N subagents (run_in_background: true), each assigned a unique Playwright prefix
-    3. Wait for completion
-    4. Main agent updates TRACKER.md:
-       SUCCESS → ✅, fill Submitted date, today_submitted++
-       FAILED → ❌ SKIPPED with reason
-    5. If more pending → repeat. If none → back to Phase 1.
+    3. Wait for ALL subagents in this batch to complete
+    4. For EACH completed subagent — immediately update TRACKER.md:
+       SUCCESS → change Status to ✅ SUBMITTED, fill Submitted date column, today_submitted++
+       FAILED  → change Status to ❌ SKIPPED, add reason to Notes column
+       Do NOT batch these updates — update one row at a time as each result comes in.
+    5. After updating TRACKER.md, verify the row was written correctly by re-reading it.
+    6. If more pending → repeat. If none → back to Phase 1.
 END WHILE
 Report: "Done: X/{config.daily_target} submitted"
 ```
+
+**TRACKER.md update rule**: The main agent — not the subagent — owns TRACKER.md. Every time a subagent returns a result, the main agent MUST edit TRACKER.md before launching the next batch. Never skip this step.
 
 ### Phase 4: Retrospective (after daily target met or session end)
 
@@ -175,7 +184,7 @@ Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md`
 8. Write cover_letter.md (if config.prepare.cover_letter_required) — must reference specific company/product details from research
 9. If cover letter: `node ${CLAUDE_SKILL_DIR}/scripts/create_cover_letter.js {APP_FOLDER}/cover-letter-config.json {APP_FOLDER}/cover_letter.docx` then convert to PDF
 10. Write notes.md with: company info, role, URL, template used, keywords mirrored, tailoring decisions, company research summary
-11. Write STATUS.md as ⬜ NOT SUBMITTED
+11. Write STATUS.md as `📁 PREPARED — NOT SUBMITTED`
 12. Do NOT submit anything — only prepare materials
 13. Do NOT fabricate experience — only use info from the resume template
 14. Return "PREPARED: {COMPANY} — {ROLE}" when done
