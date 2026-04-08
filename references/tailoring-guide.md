@@ -21,13 +21,24 @@ For each role, select up to `config.prepare.max_bullets_per_role` bullets. For e
 
 **All roles must appear.** If a role has fewer bullets than the max, include all of them.
 
+### 3. Adjust Skills Section
+Keep the same categories and format (`• Category: item1, item2, ...`). You may:
+- Remove items irrelevant to this role
+- Reorder items within a category (most relevant first)
+- Reorder categories (most relevant category first)
+
+You may NOT:
+- Add items not in the template
+- Change category names
+- Add new categories
+- Allow any category to wrap beyond one line (≤ ~110 chars including the `• Category: ` prefix — trim items until it fits)
+
 ## What Stays Exactly As-Is (Do Not Touch)
 
 - Role order (same as template)
 - Job titles (exact copy from template)
 - Company names (exact copy from template)
 - Dates (exact copy from template)
-- Skills section — categories, order, and items (exact copy from template)
 - Education section (exact copy from template)
 - Projects section (exact copy from template, if present)
 
