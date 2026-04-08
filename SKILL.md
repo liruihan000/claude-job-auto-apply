@@ -175,6 +175,7 @@ Start from the research already saved in {APP_FOLDER}. You may do additional web
 
 **Steps:**
 1. Read `{APP_FOLDER}/jd.md`, `{APP_FOLDER}/jd-keywords.json`, `{APP_FOLDER}/notes.md`
+   **JD completeness check**: If `jd.md` is missing, empty, or clearly truncated (< 300 words, no responsibilities/requirements section), re-fetch the full JD from the URL in `notes.md` and overwrite `jd.md` and `jd-keywords.json`.
 2. Select the best matching template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md` — read its full content for experience/skills
 3. Read `user-profile.md` for personal info (contact, work auth, EEO)
 4. Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
