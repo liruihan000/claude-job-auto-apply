@@ -16,7 +16,12 @@ Read all criteria from config.json. Apply in order — reject early to save time
 
 When multiple jobs pass filters, prioritize by:
 
-1. **Recency**: 24h > 3 days > 7 days
-2. **ATS speed**: Indeed Smart Apply > LinkedIn Easy Apply > Greenhouse/Lever > Workday/Taleo/Oracle
-3. **Skills overlap**: Higher overlap first
-4. **Company size**: Larger companies more likely to sponsor
+1. **Competitive advantage signals** (highest weight — apply first):
+   - JD mentions Mandarin / Chinese / bilingual → strong advantage (user is native Mandarin speaker)
+   - JD mentions vibe coding / AI-assisted development / AI-native workflow / coding with AI tools → strong advantage
+   - JD mentions both → highest priority of all
+2. **Recency**: 24h > 3 days > 7 days
+3. **ATS speed**: Indeed Smart Apply > LinkedIn Easy Apply > Greenhouse/Lever > Workday/Taleo/Oracle
+4. **Skills overlap**: Higher overlap first
+5. **Salary**: Do NOT filter by salary — low-salary roles may have less competition and are equally worth applying to
+6. **Company size**: Larger companies more likely to sponsor
