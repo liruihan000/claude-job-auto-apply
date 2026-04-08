@@ -131,6 +131,31 @@ After auto-review, show the user a summary of each prepared application and any 
 
 ### Phase 3: Submit
 
+**Two modes depending on `config.automation.manual_review`:**
+
+#### Manual Review Mode (`manual_review: true`) — Sequential, one browser tab
+
+```
+Use a SINGLE Playwright instance throughout. Process jobs one at a time:
+
+FOR each job with 📁 PREPARED status:
+    1. Navigate to the job URL in the existing browser tab (do not open a new tab)
+    2. Fill all forms and upload the tailored resume as normal
+    3. Navigate to the final review/confirmation page
+    4. Take a screenshot → {APP_FOLDER}/review-screenshot.png
+    5. STOP — show the user the screenshot and say:
+       "Ready to submit: {COMPANY} — {ROLE}. Please review and click Submit yourself.
+        Tell me 'submitted', 'skip', or 'stop' when done."
+    6. Wait for user response:
+       - "submitted" → update TRACKER.md to ✅ SUBMITTED, take confirmation screenshot, today_submitted++, continue to next job
+       - "skip" → update TRACKER.md to ❌ SKIPPED, continue to next job (keep browser tab open)
+       - "stop" → save state and exit loop
+    7. Keep the same browser tab open for the next job — do NOT close or navigate away until next job starts
+END FOR
+```
+
+#### Autonomous Mode (`manual_review: false`) — Parallel subagents
+
 ```
 WHILE today_submitted < config.daily_target:
     1. Pick up to N jobs whose STATUS.md contains `📁 PREPARED` (N = config.submit.parallel_instances)
@@ -143,10 +168,9 @@ WHILE today_submitted < config.daily_target:
     5. After updating TRACKER.md, verify the row was written correctly by re-reading it.
     6. If more pending → repeat. If none → back to Phase 1.
 END WHILE
-Report: "Done: X/{config.daily_target} submitted"
 ```
 
-**TRACKER.md update rule**: The main agent — not the subagent — owns TRACKER.md. Every time a subagent returns a result, the main agent MUST edit TRACKER.md before launching the next batch. Never skip this step.
+**TRACKER.md update rule**: The main agent owns TRACKER.md. Update immediately after each result — never batch or skip.
 
 ### Phase 4: Retrospective (after daily target met or session end)
 
