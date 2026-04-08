@@ -218,6 +218,7 @@ Submit application to {COMPANY} — {ROLE}.
 - Auto-agree all terms/cookies/eSignatures (if config.automation.auto_agree_terms)
 - Auto-register accounts if needed (if config.automation.auto_register_accounts)
 - Fill ALL required fields — never leave a field empty or on "Select..."
+- **Resume upload**: ALWAYS upload {RESUME_PATH} — never use a previously saved resume from the ATS profile, even if one is already shown. Actively replace it.
 - Screening questions: authorized=Yes, sponsorship=Yes (+explanation), 18+=Yes, background=Yes, previously worked=No. Check for follow-up fields after each answer.
 - Experience/Education dates must match the tailored resume exactly — never guess
 - Before submitting: verify all required fields are filled

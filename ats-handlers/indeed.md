@@ -41,11 +41,24 @@ Check the apply button text:
 
 ### Screen 2: Resume
 ```
-1. Indeed may show previously uploaded resumes
-2. If existing resume shown: check if it's the right one
-3. To upload new: find "Upload resume" or file input
-4. browser_file_upload with ref — NEVER click the file input directly
-5. Wait for upload to complete
+ALWAYS upload the tailored resume from {RESUME_PATH} — NEVER use Indeed's
+previously saved resume, even if one is already shown on the page.
+
+Steps:
+1. If an existing resume is already shown, find "Upload resume", "Change resume",
+   or the "Edit" link next to the Resume section — click it to open the upload option
+2. Find the file input element (may be visually hidden behind a styled button)
+   — use browser_file_upload with the input element ref
+   — do NOT click the visible "Upload" button directly (it may open a file picker
+   that Playwright cannot interact with)
+3. Upload {RESUME_PATH} (the application-specific resume.pdf from the app folder)
+4. Wait for filename confirmation ("Uploaded just now" or the filename appearing)
+5. Verify the displayed filename is resume.pdf — not an old Indeed profile resume
+
+If Indeed does not allow replacing the resume (field locked/greyed out):
+- Screenshot the page
+- Note in STATUS.md: "Could not replace resume — Indeed locked to profile resume"
+- Continue submission anyway
 ```
 
 ### Screen 3: Additional Questions
