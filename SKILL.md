@@ -133,25 +133,36 @@ After auto-review, show the user a summary of each prepared application and any 
 
 **Two modes depending on `config.automation.manual_review`:**
 
-#### Manual Review Mode (`manual_review: true`) — Sequential, one browser tab
+#### Manual Review Mode (`manual_review: true`) — Parallel subagents, user submits manually
 
+Subagents still run in parallel across the N Playwright instances. Each subagent's job ends at the review page — the user submits manually in the browser.
+
+**Subagent behavior (manual_review: true):**
 ```
-Use a SINGLE Playwright instance throughout. Process jobs one at a time:
+1. Navigate to job URL (opens a new tab in the assigned Playwright browser instance)
+2. Fill all forms and upload tailored resume as normal
+3. Navigate to the final review/confirmation page — do NOT click Submit
+4. Take screenshot → {APP_FOLDER}/review-screenshot.png
+5. Return "REVIEW_READY: {COMPANY} — {ROLE} | screenshot: {APP_FOLDER}/review-screenshot.png"
+   (Task is complete — browser tab stays open at the review page)
+```
 
-FOR each job with 📁 PREPARED status:
-    1. Navigate to the job URL in the existing browser tab (do not open a new tab)
-    2. Fill all forms and upload the tailored resume as normal
-    3. Navigate to the final review/confirmation page
-    4. Take a screenshot → {APP_FOLDER}/review-screenshot.png
-    5. STOP — show the user the screenshot and say:
-       "Ready to submit: {COMPANY} — {ROLE}. Please review and click Submit yourself.
-        Tell me 'submitted', 'skip', or 'stop' when done."
-    6. Wait for user response:
-       - "submitted" → update TRACKER.md to ✅ SUBMITTED, take confirmation screenshot, today_submitted++, continue to next job
-       - "skip" → update TRACKER.md to ❌ SKIPPED, continue to next job (keep browser tab open)
-       - "stop" → save state and exit loop
-    7. Keep the same browser tab open for the next job — do NOT close or navigate away until next job starts
-END FOR
+**Main agent behavior (manual_review: true):**
+```
+WHILE today_submitted < config.daily_target:
+    1. Pick up to N jobs with 📁 PREPARED (N = config.submit.parallel_instances)
+    2. Launch N subagents (run_in_background: true)
+    3. As each subagent returns REVIEW_READY:
+       - Show user: "✋ Ready to submit: {COMPANY} — {ROLE}
+         Review screenshot: {APP_FOLDER}/review-screenshot.png
+         Please submit in browser, then reply 'submitted {COMPANY}', 'skip {COMPANY}', or 'stop'"
+       - Do NOT wait — immediately dispatch next subagent for the next pending job
+    4. When user replies for a specific company:
+       - "submitted {COMPANY}" → update TRACKER.md ✅, today_submitted++
+       - "skip {COMPANY}"      → update TRACKER.md ❌ SKIPPED
+       - "stop"                → pause loop, wait for further instructions
+    5. If more pending jobs → continue dispatching subagents
+END WHILE
 ```
 
 #### Autonomous Mode (`manual_review: false`) — Parallel subagents
