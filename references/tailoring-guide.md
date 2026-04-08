@@ -18,6 +18,7 @@ For each role, select up to `config.prepare.max_bullets_per_role` bullets. For e
 - Do NOT change numbers, percentages, or scale figures
 - Do NOT add tools or technologies not present in the original bullet
 - Bullets not selected are simply omitted — do not replace them with invented content
+- **Length**: the rephrased bullet must not exceed the original bullet's line count when rendered at 10pt Times New Roman in a single-column layout. Aim for similar word count (±20%). Do not expand a 1-line bullet into 2 lines.
 
 **All roles must appear.** If a role has fewer bullets than the max, include all of them.
 
