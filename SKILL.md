@@ -62,7 +62,7 @@ When the user wants to discuss a specific job rather than auto-apply:
 
 ## Auto-Apply Pipeline
 
-### Phase 1: Search
+### Phase 1: Search + Research
 
 Find jobs until `pending + today_submitted >= config.daily_target`.
 
@@ -70,10 +70,16 @@ Search `config.search.platforms` in parallel per `${CLAUDE_SKILL_DIR}/references
 Searches may use Playwright MCP, WebSearch, or WebFetch for job discovery.
 Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate.
 
-**After each batch of jobs found — immediately add to TRACKER.md as ⬜ NOT SUBMITTED.** Do not wait until all searches finish. Add each job as it is selected, one row at a time.
+**For each selected job — immediately:**
+1. Add a row to TRACKER.md as ⬜ NOT SUBMITTED (do not batch; add one at a time)
+2. Create folder `applications/YYYY-MM-DD_Company_Role/`
+3. Fetch the full JD text and save to `{APP_FOLDER}/jd.md`
+4. Extract JD keywords and save to `{APP_FOLDER}/jd-keywords.json` (format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`)
+5. Find and read the company About/Mission page; save company summary to `{APP_FOLDER}/notes.md` (include: industry, product, size, stage, culture, JD URL)
+6. Write `{APP_FOLDER}/STATUS.md` as `⬜ NOT SUBMITTED`
 
 **Review checkpoint (if `config.automation.manual_review: true`):**
-Show the user the list of jobs found (company, role, platform, URL). Wait for user to confirm which jobs to proceed with. Remove any rejected jobs from TRACKER.md.
+Show the user the list of jobs found (company, role, platform, URL). Wait for user to confirm which jobs to proceed with. Remove any rejected jobs from TRACKER.md and their folders.
 
 ### Phase 1.5: Network Scan (optional — requires LinkedIn login in Playwright profile)
 
@@ -84,21 +90,24 @@ For each company in TRACKER.md with ⬜ status:
 
 Skip this phase if LinkedIn is not logged in or if it gets blocked. Do not spend more than 30 seconds per company.
 
-### Phase 2: Prepare
+### Phase 2: Prepare (resume + cover letter only)
 
-For each ⬜ job without materials:
-1. Create folder: `applications/YYYY-MM-DD_Company_Role/`
-2. Select template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md`, read its content for experience/skills
-3. Read `user-profile.md` for personal info (contact, work auth, EEO)
-4. Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
-5. Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
-6. Generate DOCX via bundled scripts, then convert to PDF: `libreoffice --headless --convert-to pdf --outdir <folder> <file.docx>`
-7. Write `notes.md` + `STATUS.md` (⬜)
+For each ⬜ job that has `jd.md` but no resume yet. All research is already done — read local files only, no web requests needed.
+
+1. Read `{APP_FOLDER}/jd.md` — full JD text
+2. Read `{APP_FOLDER}/jd-keywords.json` — extracted keywords
+3. Read `{APP_FOLDER}/notes.md` — company info
+4. Select template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md`
+5. Read `user-profile.md` for personal info (contact, work auth, EEO)
+6. Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
+7. Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` (if `config.prepare.cover_letter_required`)
+8. Generate DOCX + PDF
+9. Write `STATUS.md` as `📁 PREPARED — NOT SUBMITTED`
 
 Can parallelize with subagents (no browser needed). Use the Prepare Subagent Prompt Template below.
 
 **After all Prepare subagents complete — sync TRACKER.md:**
-Scan every `applications/*/STATUS.md`. For each application folder that has `STATUS.md` with content `📁 PREPARED` or `✅ SUBMITTED`, ensure the corresponding TRACKER.md row reflects that status. This is the source of truth — always sync from STATUS.md files, never guess.
+Scan every `applications/*/STATUS.md`. For each folder with `📁 PREPARED` or `✅ SUBMITTED`, ensure the corresponding TRACKER.md row reflects that status.
 
 ### Phase 2.5: Auto-Review (MANDATORY — always runs)
 
@@ -155,39 +164,30 @@ Replace `{variables}`, pass to Agent tool:
 ```
 Prepare application materials for {COMPANY} — {ROLE}.
 
-**Job URL**: {JOB_URL}
 **Application folder**: {APP_FOLDER}
 
-**Step 0 — Research:**
-1. Navigate to {JOB_URL} using WebFetch or Playwright and read the FULL job description
-2. Extract JD keywords and save to `{APP_FOLDER}/jd-keywords.json` with format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`
-3. Find the company website (usually linked in the JD or search "{COMPANY} about")
-4. Read the company's About/Mission page — note: industry, product, size, stage, culture
-5. Save all findings for use in resume tailoring and cover letter
+Start from the research already saved in {APP_FOLDER}. You may do additional web research if needed (e.g. deeper company info, product details for cover letter).
 
-**Step 1 — Prepare materials:**
-Select template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md` — read its content for experience/skills.
-Read `user-profile.md` for personal info (contact, work auth, EEO).
-Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` — use the full JD and company info.
-**Format**: All generated resumes must follow `${CLAUDE_SKILL_DIR}/references/resume-format-spec.md` (Times New Roman, black section headers, 2-line company format, bullet skills). `create_resume.js` enforces this automatically.
-Generate cover letter per `${CLAUDE_SKILL_DIR}/references/cover-letter-guide.md` — reference specific company details.
+**Input files (already exist in {APP_FOLDER}):**
+- `jd.md` — full job description text
+- `jd-keywords.json` — extracted JD keywords
+- `notes.md` — company info (industry, product, size, culture)
 
-**Rules:**
-1. Create folder {APP_FOLDER} if it doesn't exist
-2. Research FIRST — read original JD from source + company info before any tailoring
-3. Select the best matching resume template
-4. Follow every step of the tailoring checklist
-5. Write resume.md (tailored resume content) and resume-config.json (structured data for DOCX generation)
+**Steps:**
+1. Read `{APP_FOLDER}/jd.md`, `{APP_FOLDER}/jd-keywords.json`, `{APP_FOLDER}/notes.md`
+2. Select the best matching template from `uploaded-resumes/` per `${CLAUDE_SKILL_DIR}/references/template-guide.md` — read its full content for experience/skills
+3. Read `user-profile.md` for personal info (contact, work auth, EEO)
+4. Tailor resume per `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md`
+   **Format**: follow `${CLAUDE_SKILL_DIR}/references/resume-format-spec.md` exactly. `create_resume.js` enforces this automatically.
+5. Write `resume-config.json` (structured data for DOCX generation)
 6. Generate DOCX: `node ${CLAUDE_SKILL_DIR}/scripts/create_resume.js {APP_FOLDER}/resume-config.json {APP_FOLDER}/resume.docx`
 7. Generate PDF: `libreoffice --headless --convert-to pdf --outdir {APP_FOLDER} {APP_FOLDER}/resume.docx`
-7a. **Page check**: Read the generated PDF and verify it is exactly 1 page. If not, adjust and regenerate DOCX+PDF. Options: adjust spacing/margins/font size in `create_resume.js` config, rephrase bullets shorter, reduce or add bullets. Prefer layout adjustments over deleting content. Repeat until exactly 1 full page.
-8. Write cover_letter.md (if config.prepare.cover_letter_required) — must reference specific company/product details from research
-9. If cover letter: `node ${CLAUDE_SKILL_DIR}/scripts/create_cover_letter.js {APP_FOLDER}/cover-letter-config.json {APP_FOLDER}/cover_letter.docx` then convert to PDF
-10. Write notes.md with: company info, role, URL, template used, keywords mirrored, tailoring decisions, company research summary
-11. Write STATUS.md as `📁 PREPARED — NOT SUBMITTED`
-12. Do NOT submit anything — only prepare materials
-13. Do NOT fabricate experience — only use info from the resume template
-14. Return "PREPARED: {COMPANY} — {ROLE}" when done
+8. **Page check**: Read the generated PDF and verify exactly 1 page. If not, reduce bullets per role (min 1) and regenerate. Repeat until exactly 1 full page.
+9. If `config.prepare.cover_letter_required`: write `cover-letter-config.json`, generate cover_letter.docx + PDF — reference specific company details from notes.md
+10. Write `STATUS.md` as `📁 PREPARED — NOT SUBMITTED`
+11. Do NOT submit anything — only prepare materials
+12. Do NOT fabricate experience — only use info from the resume template
+13. Return "PREPARED: {COMPANY} — {ROLE}" when done
 ```
 
 ---
