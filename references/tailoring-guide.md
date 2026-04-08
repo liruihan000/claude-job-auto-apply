@@ -2,80 +2,61 @@
 
 This guide is read by the agent during Phase 2 (Prepare). Follow every step for every application.
 
-## Tailoring Checklist
+## Core Philosophy: Micro-Adjust Only
 
-For each job, perform all steps in order:
+**Do NOT rewrite the resume from scratch.** Start from the selected template and make only the two permitted changes below. Everything else — role order, job titles, dates, skills structure, skills order — stays exactly as in the template.
 
-### 1. Analyze JD
-Before any editing, extract from the JD:
-- **Hard requirements**: must-have skills, years of experience, degrees
-- **Soft requirements**: preferred/nice-to-have skills
-- **Keywords**: technical terms, tools, frameworks, methodologies
-- **Tone**: startup vs enterprise, fast-paced vs structured
+## The Two Permitted Changes
 
-### 2. Rewrite Summary
-Write 2-3 sentences mirroring the job posting's core requirements. Never reuse a summary across applications. Include the top 3 keywords from the JD naturally.
+### 1. Rewrite Summary
+Write 2-3 sentences mirroring the job posting's core requirements. This is the only section written from scratch. Never reuse a summary across applications. Include the top 3 keywords from the JD naturally. Keep the same approximate length as the template summary.
 
-### 3. ATS Keyword Optimization
-Extract top 10-15 keywords from the JD. For each keyword:
-- Check if it appears in the selected resume template (the user actually has this skill)
-- If yes: ensure it appears at least once in the resume (summary, bullets, or skills)
-- If no: skip — never add skills the user doesn't have
-- Use the **exact phrasing** from the JD (e.g. "React.js" not "React", "CI/CD" not "continuous integration") — ATS systems match exact strings
-- Place high-priority keywords in the summary and skills section (ATS often weighs these higher)
+### 2. Rephrase Bullets (select a subset)
+For each role, select up to `config.prepare.max_bullets_per_role` bullets. For each selected bullet:
+- Keep the same achievement, metric, and technical fact from the template
+- Rephrase the wording to incorporate JD keywords naturally
+- Do NOT change numbers, percentages, or scale figures
+- Do NOT add tools or technologies not present in the original bullet
+- Bullets not selected are simply omitted — do not replace them with invented content
 
-### 4. Reorder Experiences
-Place the most relevant role first. If the user has multiple roles, lead with the one that best matches the JD's primary requirements.
+**All roles must appear.** If a role has fewer bullets than the max, include all of them.
 
-### 5. Cherry-Pick Bullets
-Select only the `config.prepare.max_bullets_per_role` most relevant bullets per role. For each bullet:
-- Must connect to a JD requirement
-- Should contain at least one JD keyword
-- Prefer bullets with quantifiable metrics (%, $, time saved, scale)
-- Use action verbs that match the JD (e.g. JD says "design and build" → bullet starts with "Designed and built")
+## What Stays Exactly As-Is (Do Not Touch)
 
-### 6. Adjust Job Titles
-If the selected resume template provides title variants for a role, select the variant that best matches the target position title.
+- Role order (same as template)
+- Job titles (exact copy from template)
+- Company names (exact copy from template)
+- Dates (exact copy from template)
+- Skills section — categories, order, and items (exact copy from template)
+- Education section (exact copy from template)
+- Projects section (exact copy from template, if present)
 
-### 7. Adjust Skills Section
-- Reorder skill categories so the most JD-relevant category leads
-- Add JD-specific tools the user actually knows (check the selected resume template)
-- Group skills to match JD sections (e.g. if JD has "Languages" and "Frameworks" separately, match that structure)
-- Remove skills irrelevant to this specific role to reduce noise
+## ATS Keyword Check
 
-### 8. Include/Exclude Optional Roles
-**All roles in the template MUST appear in the tailored resume** — do not silently drop any role. If space is tight, reduce bullets per role (minimum 1 bullet) rather than omitting the role entirely. Only omit a role if the template explicitly marks it as "omit when space tight" AND the resume would exceed 1 page even after trimming.
+After writing the summary and rephrasing bullets, verify:
+- Top 5 JD keywords appear at least once in the resume (summary or bullets)
+- If a keyword is missing and the user has the skill (it's in the template), naturally work it into a bullet rephrase
+- Never add a keyword for a skill not in the template
 
-### 9. ATS Compatibility Check
+## ATS Compatibility Check
+
 Before finalizing:
 - No tables, columns, or complex formatting (ATS can't parse them)
-- No headers/footers with critical info (ATS may skip them)
-- Standard section headings: "Experience", "Education", "Skills", "Projects" (ATS looks for these)
-- No images, icons, or graphics
+- Standard section headings: "Experience", "Education", "Skills", "Projects"
 - Dates in consistent format (e.g. "Jun 2024 – Present")
-- File format: .docx preferred (some ATS struggle with PDF parsing)
+- File format: generate both .docx and .pdf
 
-### 10. Verify 1-Page Fit
-The final resume must fit a single US Letter page. If it overflows, cut the least relevant content first (optional roles → less relevant bullets → projects). **Minimize blank space — bottom whitespace should be ≤ 2 lines.** If there is significant whitespace, add more relevant bullets, include optional roles/projects, or expand the skills section. A well-filled page signals strong experience.
+## Verify 1-Page Fit
 
-## ATS Score Self-Check
-
-After tailoring, mentally score the resume:
-- **Keyword match rate**: what % of JD keywords appear in resume? Target: 80%+
-- **Section completeness**: summary + skills + experience + education all present?
-- **Formatting**: clean, single-column, standard headings?
-- If score feels below 80%, revisit steps 3 and 5.
+The final resume must fit a single US Letter page. If it overflows, reduce the number of bullets per role (minimum 1 per role). Never omit a role. **Bottom whitespace should be ≤ 2 lines** — if too much whitespace, add back omitted bullets.
 
 ## Rules
 
 - **Never fabricate experience** — only use information from the selected resume template
-- **Never add skills/tools not in the source resume** — if the source doesn't list Prometheus, Grafana, gRPC, LangGraph, etc., do NOT add them. Only reorder or rephrase existing skills.
-- **Never change job titles** — use the exact title from the source resume. Do not upgrade "Software Engineer" to "Technical Lead" or "Founding Engineer".
-- **Never change dates** — all start/end dates must match the source resume exactly. Do not extend, shorten, or move date ranges.
-- **Never inflate years of experience** — calculate from actual work history dates in the source resume. If total is ~3 years, write "3+ years", not "5+ years".
-- **Never add companies or roles not in the source resume** — only include positions that exist in the selected template.
+- **Never add skills/tools not in the source resume**
+- **Never change job titles, dates, or company names**
+- **Never inflate years of experience**
 - **Never copy JD text verbatim** — rephrase in the user's voice
-- **Metrics matter** — prefer bullets with quantifiable results, but only use metrics that exist in the source resume
-- **Read the full JD** before starting — understand what the company actually needs
-- **Exact keyword matching** — use the same terms as the JD, but only for skills the user actually has in the source resume
+- **Metrics must come from the template** — never invent numbers
+- **Read the full JD** before starting
 - **One resume per application** — never submit the same tailored resume twice
