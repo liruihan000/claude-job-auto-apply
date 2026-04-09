@@ -31,7 +31,7 @@ Every time this skill is invoked:
 
 0. **Check user intent**: 
    - If the user asks a question or says "discuss"/"analyze"/"review"/"look at" about a job → enter **Discussion Mode** (see below).
-   - If the user says "apply"/"submit"/"投" + a specific job URL or role → enter **Single Apply Mode**: skip Phase 1 (search), go directly to Phase 2 for that job only, then Phase 2.5 → Phase 3.
+   - If the user says "apply"/"submit"/"投" + a specific job URL or role → enter **Single Apply Mode**: run the Phase 1 research steps for that job (fetch JD, extract keywords, research company, create folder), then go directly to Phase 2 → Phase 2.5 → Phase 3 for that job only.
    - Otherwise → continue to auto-apply flow.
 1. Run `node ${CLAUDE_SKILL_DIR}/scripts/bootstrap.js` → load config + check readiness
    - If `ready: false` → read `${CLAUDE_SKILL_DIR}/SETUP.md` and guide user through missing items. **Do NOT proceed to any Phase. Do NOT attempt workarounds or alternative tools.**
@@ -70,16 +70,18 @@ Search `config.search.platforms` in parallel per `${CLAUDE_SKILL_DIR}/references
 Searches may use Playwright MCP, WebSearch, or WebFetch for job discovery.
 Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate.
 
-**For each candidate job — in this order:**
+**For each candidate job — complete ALL steps before moving to the next job:**
 1. Fetch the full JD text (do not add to TRACKER yet)
 2. Apply ALL filters from `${CLAUDE_SKILL_DIR}/references/selection-strategy.md` — especially sponsorship and citizenship checks. If the job fails any filter → **skip entirely, do not create folder, do not add to TRACKER**
-3. Only if the job passes all filters:
+3. Only if the job passes all filters — complete ALL of the following before proceeding to the next job:
    a. Add a row to TRACKER.md as ⬜ NOT SUBMITTED
    b. Create folder `applications/YYYY-MM-DD_Company_Role/`
    c. Save full JD text to `{APP_FOLDER}/jd.md`
    d. Extract JD keywords → `{APP_FOLDER}/jd-keywords.json` (format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`)
    e. Find and read the company About/Mission page; save summary to `{APP_FOLDER}/notes.md` (include: industry, product, size, stage, culture, JD URL)
    f. Write `{APP_FOLDER}/STATUS.md` as `⬜ NOT SUBMITTED`
+   
+   **A job is only "done" in Phase 1 when all 6 files exist: TRACKER row + folder + jd.md + jd-keywords.json + notes.md + STATUS.md. Partial completion = not done.**
 
 **Review checkpoint (if `config.automation.manual_review: true`):**
 Show the user the list of jobs found (company, role, platform, URL). Wait for user to confirm which jobs to proceed with. Remove any rejected jobs from TRACKER.md and their folders.
@@ -95,7 +97,7 @@ Skip this phase if LinkedIn is not logged in or if it gets blocked. Do not spend
 
 ### Phase 2: Prepare (resume + cover letter only)
 
-For each ⬜ job that has `jd.md` but no resume yet. All research is already done — read local files only, no web requests needed.
+For each job whose `STATUS.md` contains `⬜ NOT SUBMITTED` AND whose folder contains `jd.md`. All research is already done — read local files only, no web requests needed.
 
 1. Read `{APP_FOLDER}/jd.md` — full JD text
 2. Read `{APP_FOLDER}/jd-keywords.json` — extracted keywords
@@ -119,7 +121,7 @@ After all materials are prepared, the **main agent** reviews each application. R
 1. **Content**: Apply the same rules from `${CLAUDE_SKILL_DIR}/references/tailoring-guide.md` to verify compliance.
 2. **Format**: Read the generated PDF and check for rendering issues — stray markdown characters (`*`, `**`, `#`), broken formatting, garbled text, missing sections.
 3. **Page fit**: Verify exactly 1 page — not overflowing, not too short.
-4. **AI writing detection + ATS keyword score**: Run `node ${CLAUDE_SKILL_DIR}/scripts/ats_score.js {APP_FOLDER}/resume.md {APP_FOLDER}/jd-keywords.json`. The agent must first extract JD keywords into `jd-keywords.json` (format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`). Check results:
+4. **AI writing detection + ATS keyword score**: Run `node ${CLAUDE_SKILL_DIR}/scripts/ats_score.js {APP_FOLDER}/resume.md {APP_FOLDER}/jd-keywords.json`. (`jd-keywords.json` was already created in Phase 1 — do not regenerate it.) Check results:
    - `ats_score < 60` → add missing keywords naturally into resume, regenerate
    - `ai_phrases_found` → replace flagged phrases with suggested alternatives
    - `ai_patterns_found` → rewrite affected sentences
@@ -152,19 +154,23 @@ Subagents still run in parallel across the N Playwright instances. Each subagent
 
 **Main agent behavior (manual_review: true):**
 ```
-WHILE today_submitted < config.daily_target:
-    1. Pick up to N jobs with 📁 PREPARED (N = config.submit.parallel_instances)
-    2. Launch N subagents (run_in_background: true)
-    3. As each subagent returns REVIEW_READY:
-       - Show user: "✋ Ready to submit: {COMPANY} — {ROLE}
-         Review screenshot: {APP_FOLDER}/review-screenshot.png
-         Please submit in browser, then reply 'submitted {COMPANY}', 'skip {COMPANY}', or 'stop'"
-       - Do NOT wait — immediately dispatch next subagent for the next pending job
-    4. When user replies for a specific company:
-       - "submitted {COMPANY}" → update TRACKER.md ✅, today_submitted++
-       - "skip {COMPANY}"      → update TRACKER.md ❌ SKIPPED
-       - "stop"                → pause loop, wait for further instructions
-    5. If more pending jobs → continue dispatching subagents
+active_subagents = 0
+WHILE today_submitted < config.daily_target OR active_subagents > 0:
+    // Dispatch up to N subagents (N = config.submit.parallel_instances)
+    WHILE active_subagents < N AND more jobs with 📁 PREPARED:
+        Launch next subagent (run_in_background: true, mode=REVIEW_ONLY)
+        active_subagents++
+
+    // Handle incoming results (non-blocking — process as they arrive)
+    When a subagent returns REVIEW_READY:
+        active_subagents--
+        Show user: "✋ {COMPANY} — {ROLE} ready. Screenshot: {APP_FOLDER}/review-screenshot.png
+                    Submit in browser → reply 'submitted {COMPANY}' | 'skip {COMPANY}' | 'stop'"
+
+    When user replies:
+        "submitted {COMPANY}" → update TRACKER.md ✅, today_submitted++
+        "skip {COMPANY}"      → update TRACKER.md ❌ SKIPPED
+        "stop"                → drain active subagents then exit loop
 END WHILE
 ```
 
@@ -238,7 +244,11 @@ Replace `{variables}`, pass to Agent tool:
 ```
 Submit application to {COMPANY} — {ROLE}.
 
-**Goal:** Navigate to {JOB_URL}, complete the entire application, and submit it.
+**Mode:** {SUBMIT_MODE}  (either "AUTO_SUBMIT" or "REVIEW_ONLY")
+
+**Goal:**
+- AUTO_SUBMIT: Fill all forms, upload resume, and click Submit.
+- REVIEW_ONLY: Fill all forms, upload resume, navigate to review/confirmation page — do NOT click Submit. Take screenshot and return "REVIEW_READY".
 
 **Tools:** ONLY use `{PLAYWRIGHT_PREFIX}*` tools. Never use other playwright instances.
 
@@ -265,8 +275,8 @@ Submit application to {COMPANY} — {ROLE}.
 - If stuck on any interaction for >config.submit.max_retries_per_form retries, skip and report why
 
 **Output:**
-- Write {APP_FOLDER}/STATUS.md as ✅ SUBMITTED
-- Return "SUCCESS" or "FAILED: [reason]"
+- AUTO_SUBMIT: Write {APP_FOLDER}/STATUS.md as ✅ SUBMITTED. Return "SUCCESS" or "FAILED: [reason]"
+- REVIEW_ONLY: Take screenshot → {APP_FOLDER}/review-screenshot.png. Do NOT write STATUS.md. Return "REVIEW_READY: {COMPANY} — {ROLE}"
 - If friction encountered, append: "FRICTION: [what happened] → [what worked]"
 ```
 
