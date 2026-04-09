@@ -70,13 +70,16 @@ Search `config.search.platforms` in parallel per `${CLAUDE_SKILL_DIR}/references
 Searches may use Playwright MCP, WebSearch, or WebFetch for job discovery.
 Filter per `${CLAUDE_SKILL_DIR}/references/selection-strategy.md`. Deduplicate.
 
-**For each selected job — immediately:**
-1. Add a row to TRACKER.md as ⬜ NOT SUBMITTED (do not batch; add one at a time)
-2. Create folder `applications/YYYY-MM-DD_Company_Role/`
-3. Fetch the full JD text and save to `{APP_FOLDER}/jd.md`
-4. Extract JD keywords and save to `{APP_FOLDER}/jd-keywords.json` (format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`)
-5. Find and read the company About/Mission page; save company summary to `{APP_FOLDER}/notes.md` (include: industry, product, size, stage, culture, JD URL)
-6. Write `{APP_FOLDER}/STATUS.md` as `⬜ NOT SUBMITTED`
+**For each candidate job — in this order:**
+1. Fetch the full JD text (do not add to TRACKER yet)
+2. Apply ALL filters from `${CLAUDE_SKILL_DIR}/references/selection-strategy.md` — especially sponsorship and citizenship checks. If the job fails any filter → **skip entirely, do not create folder, do not add to TRACKER**
+3. Only if the job passes all filters:
+   a. Add a row to TRACKER.md as ⬜ NOT SUBMITTED
+   b. Create folder `applications/YYYY-MM-DD_Company_Role/`
+   c. Save full JD text to `{APP_FOLDER}/jd.md`
+   d. Extract JD keywords → `{APP_FOLDER}/jd-keywords.json` (format: `{"required_skills":[], "preferred_skills":[], "keywords":[]}`)
+   e. Find and read the company About/Mission page; save summary to `{APP_FOLDER}/notes.md` (include: industry, product, size, stage, culture, JD URL)
+   f. Write `{APP_FOLDER}/STATUS.md` as `⬜ NOT SUBMITTED`
 
 **Review checkpoint (if `config.automation.manual_review: true`):**
 Show the user the list of jobs found (company, role, platform, URL). Wait for user to confirm which jobs to proceed with. Remove any rejected jobs from TRACKER.md and their folders.
